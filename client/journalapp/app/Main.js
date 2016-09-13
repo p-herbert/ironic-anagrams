@@ -77,7 +77,7 @@ export default class Main extends Component {
         //   })
         //   .catch( err => console.log("ERROR: ", err) );
 
-        this.setState({location: 'San Francisco, CA'});
+        this.setState({location: 'San Franpsycho, CA'});
       },
       (error) => alert(JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
@@ -120,7 +120,7 @@ export default class Main extends Component {
   // publish onPress method.
   postEntry(navigator){
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      var newEntry = { text: this.state.newEntry, location: this.state.location };
+      var newEntry = { text: this.state.newEntry, location: this.state.location, tags: JSON.stringify(tags)};
 
       fetch('http://localhost:3000/api/entries', {
         method: 'POST',
