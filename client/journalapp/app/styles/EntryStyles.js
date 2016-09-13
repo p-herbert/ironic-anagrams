@@ -21,11 +21,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 0,
   },
+  rowFooter: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    flexDirection: 'row'
+  },
   date: {
     justifyContent: 'flex-start',
     fontSize: 11,
     color: '#999999',
     fontWeight: '500'
+  },
+  tag: {
+    color: '#007fff',
+    fontSize: 10,
+    fontWeight: 'bold'
+
   },
   location: {
     justifyContent: 'flex-end',

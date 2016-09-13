@@ -105,6 +105,10 @@ export default class Main extends Component {
       .then( resp => { resp.json()
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          json.map(function(entry){
+            entry.tags = JSON.parse(entry.tags);
+            return entry;
+          });
           this.setState({
             entries: ds.cloneWithRows(json)
           })

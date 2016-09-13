@@ -28,6 +28,11 @@ var Entry = (props) => (
           { props.text }
         </Text>
       </View>
+      <View style= { styles.rowFooter }>
+        <Text style= { styles.tag }>
+          { props.tags.join(' ') }
+        </Text>
+      </View>
     </View>
   </View>
 );
