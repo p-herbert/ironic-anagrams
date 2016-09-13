@@ -7,39 +7,42 @@ import {
   TextInput,
   ListView,
   View,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 
 import styles from '../styles/EntryStyles';
 
 var Entry = (props) => (
-  <View style={ styles.container }>
-    <View style={ styles.row }>
-      <View style={ styles.rowHeader }>
-        <Text style={ styles.leftGroup }>
-          <Text style={ styles.username }>
-            { props.username } 
+  <TouchableOpacity onPress={click.bind(this)}>
+    <View style={ styles.container }>
+      <View style={ styles.row }>
+        <View style={ styles.rowHeader }>
+          <Text style={ styles.leftGroup }>
+            <Text style={ styles.username }>
+              { props.username }
+            </Text>
+            <Text style={ styles.date }>
+              { parseDate(props.createdAt) }
+            </Text>
           </Text>
-          <Text style={ styles.date }>
-            { parseDate(props.createdAt) }
+          <Text style={ styles.location }>
+            { props.location }
           </Text>
-        </Text>
-        <Text style={ styles.location }>
-          { props.location }
-        </Text>
-      </View>
-      <View style={ styles.rowBody }>
-        <Text style={ styles.entryText }>
-          { props.text }
-        </Text>
-      </View>
-      <View style= { styles.rowFooter }>
-        <Text style= {styles.filler}>
-        </Text>
-        { createTags(props) } 
+        </View>
+        <View style={ styles.rowBody }>
+          <Text style={ styles.entryText }>
+            { props.text }
+          </Text>
+        </View>
+        <View style= { styles.rowFooter }>
+          <Text style= {styles.filler}>
+          </Text>
+          { createTags(props) }
+        </View>
       </View>
     </View>
-  </View>
+  </TouchableOpacity>
 );
 
 module.exports = Entry;
@@ -61,3 +64,8 @@ var parseDate = (date) => {
   date = new Date(date);
   return DateFormatter(date, 'ddd, mmm d HH:MM');
 };
+
+var click = function() {
+  console.log('Entry Clicked');
+}
+
