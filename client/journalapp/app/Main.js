@@ -119,9 +119,32 @@ export default class Main extends Component {
   // Enter a new entry for the user. This method is here rather than in EntryTab.js so that the user may use the 
   // publish onPress method.
   postEntry(navigator){
+    var text = this.state.newEntry;
+    let tags = [];
+    let tag = '';
+    let partOfTag = false; 
+    var alphanumregex = new RegExp("^[a-zA-Z0-9]+$");
+    for (var i = 0; i < text.length; i ++) {
+      if (this.state.newEntry[i] === '#') {
+        console.log('here');
+        partOfTag = true;
+      }
+      if (partOfTag === true) {
+        if (alphanumregex.test(this.state.newEntry[i]) || this.state.newEntry[i] === '#') {
+          tag = tag.concat(this.state.newEntry[i]);
+        } else {
+          tags.push(tag);
+          tag = '';
+          partOfTag = false;
+        }
+      }
+    }
+    if (tag !== '') {
+      tags.push(tag);
+      tag = '';
+    }
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       var newEntry = { text: this.state.newEntry, location: this.state.location, tags: JSON.stringify(tags)};
-
       fetch('http://localhost:3000/api/entries', {
         method: 'POST',
         headers: {

@@ -17,7 +17,7 @@ var Entry = (props) => (
     <View style={ styles.row }>
       <View style={ styles.rowHeader }>
         <Text style={ styles.date }>
-          { parseDate(props.createdAt) }
+          { parseDate(props) }
         </Text>
         <Text style={ styles.location }>
           { props.location }
@@ -34,7 +34,8 @@ var Entry = (props) => (
 
 module.exports = Entry;
 
-var parseDate = (date) => {
-  date = new Date(date);
+var parseDate = (props) => {
+  console.log(props);
+  date = new Date(props.createdAt);
   return DateFormatter(date, "ddd, mmm d");
 };

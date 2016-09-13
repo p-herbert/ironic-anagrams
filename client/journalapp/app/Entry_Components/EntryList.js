@@ -15,7 +15,7 @@ var EntryList = ({entries}) => (
   <ListView style ={styles.container}
      dataSource={entries}
      renderRow={ (rowData) =>
-        <Entry text={ rowData.text } createdAt={ rowData.createdAt } location={ rowData.location }/>
+        <Entry text={ rowData.text } createdAt={ rowData.createdAt } location={ rowData.location } tags={ rowData.tags }/>
       }/>
 )
 
