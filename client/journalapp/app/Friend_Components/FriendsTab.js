@@ -26,7 +26,8 @@ export default class FriendsTab extends Component {
 
     this.state = {
       friendList: [],
-      pendingRequests: []
+      pendingRequests: [],
+      allMessages: {}
     };
   };
 
@@ -49,9 +50,13 @@ export default class FriendsTab extends Component {
       .then( resp => { resp.json()
         .then( json => {
           if (json.name !== 'SequelizeDatabaseError') {
-            this.setState({ friendList: json })
-          };
+            this.setState({ friendList: json });
+            console.log('Were here');
+            this.getAllFriendsMessages();
+            //Only call this once the friend request has returned
+          }
         })
+        // .then(this.getAllFriendsMessages)
         .catch((error) => {
           console.warn("error on json():", error)
         });
@@ -59,9 +64,48 @@ export default class FriendsTab extends Component {
       .catch( error => {
         console.log("error on fetch()", error)
       });
-      ;
     });
   }
+
+
+  getAllFriendsMessages() {
+    console.log('About to get all friends messages: ', this.state.friendList);
+    var count = 0;
+    var cb = () => {
+      count++;
+      console.log(this.state, count);
+      //if ()
+    };
+    this.state.friendList.forEach(friend => this.getFriendPosts(friend.id, cb));
+  }
+
+  getFriendPosts(friendId, callback) {
+    console.log('Getting a friends posts');
+    var url = 'http://localhost:3000/api/entries' + "/?userId=" + friendId.toString();
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+      fetch(url , {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
+      })
+      .then( resp => { resp.json()
+        .then( json => {
+          console.log('Fetched friends posts', json);
+          const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          this.setState({
+            entries: ds.cloneWithRows(json)
+          });
+        })
+        .then(callback)
+        .catch((error) => {
+          console.warn("fetch error on getrequest:", error);
+        });
+      });
+    });
+  }
+
 
   // This will happen when the component is mounted, and will show a list (via RequestList) of 
   // requests (via Request).
