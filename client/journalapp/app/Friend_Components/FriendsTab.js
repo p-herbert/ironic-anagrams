@@ -9,7 +9,8 @@ import {
   ScrollView,
   AsyncStorage,
   Navigator,
-  Dimensions
+  Dimensions,
+  ListView
 } from 'react-native';
 
 import FriendList from './FriendList';
@@ -24,14 +25,16 @@ export default class FriendsTab extends Component {
 
     this.props = props;
 
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       friendList: [],
       pendingRequests: [],
-      allMessages: {}
+      allMessages: [],
+      entries: ds.cloneWithRows([])
     };
-  };
+  }
 
-  componentWillMount(){
+  componentWillMount() {
     this.getFriends();
     this.getFriendRequests();
   }
@@ -51,12 +54,10 @@ export default class FriendsTab extends Component {
         .then( json => {
           if (json.name !== 'SequelizeDatabaseError') {
             this.setState({ friendList: json });
-            console.log('Were here');
-            this.getAllFriendsMessages();
             //Only call this once the friend request has returned
+            this.getAllFriendsMessages();
           }
         })
-        // .then(this.getAllFriendsMessages)
         .catch((error) => {
           console.warn("error on json():", error)
         });
@@ -73,8 +74,15 @@ export default class FriendsTab extends Component {
     var count = 0;
     var cb = () => {
       count++;
-      console.log(this.state, count);
-      //if ()
+      console.log(this.state.allMessages, count);
+      if (count === this.state.friendList.length) {
+        console.log('Update the list entries');
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+          entries: ds.cloneWithRows(this.state.allMessages)
+        });
+        console.log(this.state.entries);
+      }
     };
     this.state.friendList.forEach(friend => this.getFriendPosts(friend.id, cb));
   }
@@ -93,9 +101,9 @@ export default class FriendsTab extends Component {
       .then( resp => { resp.json()
         .then( json => {
           console.log('Fetched friends posts', json);
-          const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          //const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
-            entries: ds.cloneWithRows(json)
+            allMessages: this.state.allMessages.concat(json)
           });
         })
         .then(callback)
@@ -187,6 +195,8 @@ export default class FriendsTab extends Component {
             friendList={ this.state.friendList } 
             navigator={ this.props.navigator } 
             updateFriend={ this.props.updateFriend }/>
+          <EntryList
+            entries={ this.state.entries } />
         </ScrollView>
       </View>
     )
