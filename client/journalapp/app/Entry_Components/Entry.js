@@ -14,7 +14,7 @@ import {
 import styles from '../styles/EntryStyles';
 
 var Entry = (props) => (
-  <TouchableOpacity onPress={click.bind(this)}>
+  <TouchableOpacity onPress={() => props.navigator.push({title: 'CommentsScene'})}>
     <View style={ styles.container }>
       <View style={ styles.row }>
         <View style={ styles.rowHeader }>

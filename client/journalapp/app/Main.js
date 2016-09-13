@@ -20,8 +20,9 @@ import SettingsTab from './Settings_Components/SettingsTab';
 import FriendScene from './Friend_Components/FriendScene';
 import MessageScene from './Entry_Components/MessageScene';
 import SearchFriends from './Friend_Components/SearchFriends';
+import CommentsScene from './Entry_Components/CommentsScene';
 
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import styles from './styles/MainStyles';
 
@@ -54,7 +55,7 @@ export default class Main extends Component {
   updateFriend(name){
     this.setState({
       friendName: name
-    })
+    });
   }
 
   // Use this to keep track of the user's last location.
@@ -115,10 +116,10 @@ export default class Main extends Component {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             entries: ds.cloneWithRows(json)
-          })
+          });
         })
         .catch((error) => {
-          console.warn("fetch error on getrequest:", error)
+          console.warn("fetch error on getrequest:", error);
         });
       });
     });
@@ -167,7 +168,7 @@ export default class Main extends Component {
           navigator.pop();
         })
           .catch((error) => {
-            console.warn("fetch error:", error)
+            console.warn("fetch error:", error);
           });
     });
   }
@@ -249,6 +250,8 @@ export default class Main extends Component {
         <SearchFriends
           navigator={ navigator } />
       )
+    } else if (route.title === 'CommentsScene') {
+      console.log('Route to Comments Scene');
     }
   }
 
