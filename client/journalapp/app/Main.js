@@ -289,6 +289,14 @@ export default class Main extends Component {
                       </Text>
                     </View>
                   )
+                } else if ( route.title === 'CommentsScene' ){
+                  return (
+                    <View style={ styles.topBarView }>
+                      <Text onPress={ ()=>{ navigator.pop() }} >
+                        <Icon style= { styles.arrow } name="close"/>
+                      </Text>
+                    </View>
+                  )
                 }
               },
 
@@ -317,6 +325,8 @@ export default class Main extends Component {
                 // Title views for the entries routes.
                 if ( route.title === 'MessageScene') {
                   return (<Text style = { [styles.faintText, styles.titleCounter] }>{ 100 - this.state.newEntry.length }</Text>)
+                } else if (route.title === 'CommentsScene') {
+                  return (<Text style={ styles.title }>{ 'Comments' }</Text>);
                 } else if ( this.state.page === 'EntriesTab' ) {
                   return (<Text style={ styles.title }>{ 'My Story' }</Text>);
                 }
