@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 
 import EntryList from '../Entry_Components/EntryList';
-
 import styles from '../styles/FriendsTabStyles';
 
 export default class FeedTab extends Component {
