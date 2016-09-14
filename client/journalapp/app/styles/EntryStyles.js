@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#cccccc',
     paddingTop: 12,
-    paddingBottom:12
+    paddingBottom: 12
   },
   row: {
     flex: 1,
@@ -28,10 +28,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   filler: {
-
+  },
+  leftGroup: {
+    justifyContent: 'flex-start'
+  },
+  username: {
+    fontSize: 12,
+    color: '#999999',
+    fontWeight: '700',
+    marginRight: 50
   },
   date: {
-    justifyContent: 'flex-start',
     fontSize: 11,
     color: '#999999',
     fontWeight: '500'

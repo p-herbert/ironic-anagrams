@@ -11,12 +11,23 @@ import {
 import Entry from './Entry';
 import styles from '../styles/EntryListStyles';
 
-var EntryList = ({entries}) => (
-  <ListView style ={styles.container}
-     dataSource={entries}
-     renderRow={ (rowData) =>
-        <Entry text={ rowData.text } createdAt={ rowData.createdAt } location={ rowData.location } tags={ rowData.tags }/>
-      }/>
+var findUsername = (id, users) => {
+  if (users) {
+    return users.filter(user => user.id === id)[0].fullname;
+  }
+};
+
+var EntryList = ({entries, users}) => (
+    <ListView style ={styles.container}
+       dataSource={entries}
+       renderRow={ (rowData) =>
+          <Entry 
+            text={ rowData.text } 
+            createdAt={ rowData.createdAt } 
+            location={ rowData.location } 
+            username= { findUsername(rowData.userId, users) }
+            tags={ rowData.tags }/>
+    }/>
 )
 
 module.exports = EntryList;

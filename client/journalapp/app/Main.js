@@ -106,7 +106,9 @@ export default class Main extends Component {
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           json.map(function(entry){
-            entry.tags = JSON.parse(entry.tags);
+            if (entry.tags) {
+              entry.tags = JSON.parse(entry.tags);
+            }
             return entry;
           });
           this.setState({
@@ -147,6 +149,7 @@ export default class Main extends Component {
       tags.push(tag);
       tag = '';
     }
+    console.log(tags);
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       var newEntry = { text: this.state.newEntry, location: this.state.location, tags: JSON.stringify(tags)};
       fetch('http://localhost:3000/api/entries', {
