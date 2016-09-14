@@ -29,9 +29,7 @@ var Entry = (props) => (
         </Text>
       </View>
       <View style= { styles.rowFooter }>
-        <Text style= { styles.tag }>
-          { props.tags.join(' ') }
-        </Text>
+        { createTags(props) } 
       </View>
     </View>
   </View>
@@ -40,7 +38,16 @@ var Entry = (props) => (
 module.exports = Entry;
 
 var parseDate = (props) => {
-  console.log(props);
   date = new Date(props.createdAt);
   return DateFormatter(date, "ddd, mmm d");
 };
+
+var createTags = (props) => {
+  return props.tags.map(function(tag){
+    return (
+        <Text style= { styles.tag }>
+          { tag }
+        </Text>
+      );
+  });
+}

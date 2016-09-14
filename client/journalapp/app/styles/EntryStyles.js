@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   },
   rowFooter: {
     flex: 1,
+    paddingRight: 5,
     justifyContent: 'flex-end',
     flexDirection: 'row'
   },
@@ -33,10 +34,17 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   tag: {
+    marginRight: 5,
+    shadowColor: "#000000",
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    },
     color: '#007fff',
     fontSize: 10,
     fontWeight: 'bold'
-
   },
   location: {
     justifyContent: 'flex-end',

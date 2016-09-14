@@ -127,14 +127,12 @@ export default class Main extends Component {
     let tags = [];
     let tag = '';
     let partOfTag = false; 
-    var alphanumregex = new RegExp("^[a-zA-Z0-9]+$");
     for (var i = 0; i < text.length; i ++) {
       if (this.state.newEntry[i] === '#') {
-        console.log('here');
         partOfTag = true;
       }
       if (partOfTag === true) {
-        if (alphanumregex.test(this.state.newEntry[i]) || this.state.newEntry[i] === '#') {
+        if ((this.state.newEntry[i] !== ' ' && this.state.newEntry[i] !== ',') || this.state.newEntry[i] === '#') {
           tag = tag.concat(this.state.newEntry[i]);
         } else {
           tags.push(tag);
