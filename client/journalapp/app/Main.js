@@ -67,6 +67,7 @@ export default class Main extends Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log(position);
         var latLng = {lat: position.coords.longitude, lng: position.coords.latitude};
         // The GeoCoder needs Xcode configuration to work. For now, use dummy data.
         // to establish connection with server. 
@@ -89,28 +90,28 @@ export default class Main extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
+  deleteEntries(username, password){
+    console.log(username, password);
+  }
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for 
   // either the signed in user, when he/she is at his/her profile, or all the entries for a selected friend, 
   // if the user has navigated over to that friend's profile. Note that it will be called on the entry tab's 
   // mount and also after the user makes a new entry (so it'll autorefresh the entry list).
-  getEntries(){
+  getEntries(tabs){
+    tabs = ['#hash'];
+    tabs = tabs || '[]';
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch('http://localhost:3000/api/entries', {
+      fetch(`http://localhost:3000/api/entries?tags=${tabs}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        }
+        },
+        query: JSON.stringify(tabs)
       })
       .then( resp => { resp.json()
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-          json.map(function(entry){
-            if (entry.tags) {
-              entry.tags = JSON.parse(entry.tags);
-            }
-            return entry;
-          });
           this.setState({
             entries: ds.cloneWithRows(json)
           })
@@ -151,7 +152,7 @@ export default class Main extends Component {
     }
     console.log(tags);
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      var newEntry = { text: this.state.newEntry, location: this.state.location, tags: JSON.stringify(tags)};
+      var newEntry = { text: this.state.newEntry, location: this.state.location, tags: tags};
       fetch('http://localhost:3000/api/entries', {
         method: 'POST',
         headers: {
@@ -182,7 +183,7 @@ export default class Main extends Component {
                                                     navigator={navigator}
                                                     updateFriend={ this.updateFriend.bind(this) }/>;
     if (this.state.page === "SettingsTab") return <SettingsTab
-                                                    signOut={ this.props.signOut }/>;
+                                                    signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>;
   }
 
   // This logic applies routing according the title of the current route. It will be activated whenever the 

@@ -4,8 +4,12 @@ import {
   Text,
   TextInput,
   ListView,
-  View
+  View,
+  DeviceEventEmitter
 } from 'react-native';
+
+
+
 
 // VB: Refactored require to use import, for consistency
 import Entry from './Entry';
@@ -28,6 +32,7 @@ var EntryList = ({entries, users}) => (
             username= { findUsername(rowData.userId, users) }
             tags={ rowData.tags }/>
     }/>
+
 )
 
 module.exports = EntryList;
