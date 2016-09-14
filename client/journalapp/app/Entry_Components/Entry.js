@@ -29,6 +29,8 @@ var Entry = (props) => (
         </Text>
       </View>
       <View style= { styles.rowFooter }>
+        <Text style= {styles.filler}>
+        </Text>
         { createTags(props) } 
       </View>
     </View>

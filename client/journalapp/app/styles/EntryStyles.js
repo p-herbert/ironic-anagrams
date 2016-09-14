@@ -27,6 +27,9 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     flexDirection: 'row'
   },
+  filler: {
+
+  },
   date: {
     justifyContent: 'flex-start',
     fontSize: 11,

@@ -135,13 +135,15 @@ export default class Main extends Component {
         if ((this.state.newEntry[i] !== ' ' && this.state.newEntry[i] !== ',') || this.state.newEntry[i] === '#') {
           tag = tag.concat(this.state.newEntry[i]);
         } else {
-          tags.push(tag);
+          if(tag !== '#'){
+            tags.push(tag);
+          }
           tag = '';
           partOfTag = false;
         }
       }
     }
-    if (tag !== '') {
+    if (tag !== '' && tag !== '#') {
       tags.push(tag);
       tag = '';
     }
