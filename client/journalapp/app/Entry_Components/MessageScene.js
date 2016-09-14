@@ -22,29 +22,29 @@ export default class FriendScene extends Component {
     super(props);
     this.props = props;
     this.state = {
-      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 70}}
+      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 70}; }
     };
-  };
+  }
 
-  componentDidMount(){
+  componentDidMount() {
     this.props.updateEntry('');
   }
 
   // This shrinks the container to accommodate the keypad, when the user clicks the text input
   // to begin his/her entry. The footer is thus effectively pulled up the view. 
-  moveUpForKeyboardShow(){
+  moveUpForKeyboardShow() {
     setTimeout( ()=> {
       this.setState(
-        { dynamicHeight : () => { return { height: Dimensions.get('window').height * .45 }} }
+        { dynamicHeight: () => { return { height: Dimensions.get('window').height * .45 }; } }
       );
     }, 200); 
   }
 
   // When the user clicks out of the text input but remains on this view, this resets the container
   // back to its original size, effectively pushing the footer back down. 
-  moveDownForKeyboardHide(){
+  moveDownForKeyboardHide() {
     this.setState(
-      { dynamicHeight : () => { return {height: Dimensions.get('window').height - 49 - 70}} }
+      { dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 70}; } }
     );
   }
 
@@ -67,6 +67,6 @@ export default class FriendScene extends Component {
           <Text style={ [styles.footerContent, styles.footerText] }>{ this.props.location }</Text>
         </View>
       </ScrollView>
-    )
+    );
   }
 }

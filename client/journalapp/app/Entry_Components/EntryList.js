@@ -33,7 +33,7 @@ var EntryList = ({entries, users, navigator}) => (
             tags={ rowData.tags }
             navigator={navigator}/>
     }/>
-)
+);
 
 module.exports = EntryList;
 

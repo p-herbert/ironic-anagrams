@@ -19,7 +19,7 @@ import EntryList from './EntryList';
 
 import GeoCoder from 'react-native-geocoder';
 
-import styles from '../styles/EntriesTabStyles'
+import styles from '../styles/EntriesTabStyles';
 
 export default class EntriesTab extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ export default class EntriesTab extends Component {
     return (
       <View style={ styles.container }>
         <View style={ styles.header }>
-          <Text style={ styles.date }>{ DateFormatter(new Date(), "ddd, mmm d") }</Text>
+          <Text style={ styles.date }>{ DateFormatter(new Date(), 'ddd, mmm d') }</Text>
           <Button style={ styles.headerButton } 
                   onPress={ () => this.props.navigator.push({ title: 'MessageScene'}) }>
             <Text style={ styles.buttonText }>What did you do today?</Text>
@@ -49,7 +49,7 @@ export default class EntriesTab extends Component {
         <EntryList entries={ this.props.entries } navigator={this.props.navigator}/>
       </View>
 
-     )
+     );
   }
 }
 
