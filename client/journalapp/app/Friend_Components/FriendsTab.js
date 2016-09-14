@@ -195,8 +195,9 @@ export default class FriendsTab extends Component {
             friendList={ this.state.friendList } 
             navigator={ this.props.navigator } 
             updateFriend={ this.props.updateFriend }/>
+          <Text style={ styles.subHeader } >Your News Feed</Text>
           <EntryList
-            entries={ this.state.entries } />
+            entries={ this.state.entries } users={this.state.friendList} />
         </ScrollView>
       </View>
     )

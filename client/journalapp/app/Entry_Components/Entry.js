@@ -16,8 +16,13 @@ var Entry = (props) => (
   <View style={ styles.container }>
     <View style={ styles.row }>
       <View style={ styles.rowHeader }>
-        <Text style={ styles.date }>
-          { parseDate(props) }
+        <Text style={ styles.leftGroup }>
+          <Text style={ styles.username }>
+            { props.username } 
+          </Text>
+          <Text style={ styles.date }>
+            { parseDate(props.createdAt) }
+          </Text>
         </Text>
         <Text style={ styles.location }>
           { props.location }
@@ -39,10 +44,6 @@ var Entry = (props) => (
 
 module.exports = Entry;
 
-var parseDate = (props) => {
-  date = new Date(props.createdAt);
-  return DateFormatter(date, "ddd, mmm d");
-};
 
 var createTags = (props) => {
   return props.tags.map(function(tag){
@@ -53,3 +54,8 @@ var createTags = (props) => {
       );
   });
 }
+
+var parseDate = (date) => {
+  date = new Date(date);
+  return DateFormatter(date, 'ddd, mmm d HH:MM');
+};
