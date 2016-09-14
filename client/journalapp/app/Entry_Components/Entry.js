@@ -46,14 +46,17 @@ module.exports = Entry;
 
 
 var createTags = (props) => {
-  return props.tags.map(function(tag){
-    return (
-        <Text style= { styles.tag }>
-          { tag }
-        </Text>
-      );
-  });
-}
+  console.log('We reached this part: ', props);
+  if (props.tags) {
+    return props.tags.map(function(tag) {
+      return (
+          <Text style= { styles.tag }>
+            { tag }
+          </Text>
+        );
+    });
+  }
+};
 
 var parseDate = (date) => {
   date = new Date(date);

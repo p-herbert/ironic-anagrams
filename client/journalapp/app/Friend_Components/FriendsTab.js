@@ -101,6 +101,14 @@ export default class FriendsTab extends Component {
       .then( resp => { resp.json()
         .then( json => {
           console.log('Fetched friends posts', json);
+
+          json.map(function(entry){
+            console.log('Mapping: ', entry);
+            if (entry.tags) {
+              entry.tags = JSON.parse(entry.tags);
+            }
+            return entry;
+          });
           //const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             allMessages: this.state.allMessages.concat(json)
