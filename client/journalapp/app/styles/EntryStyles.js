@@ -21,11 +21,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 0,
   },
+  rowFooter: {
+    flex: 1,
+    paddingRight: 5,
+    justifyContent: 'flex-end',
+    flexDirection: 'row'
+  },
+  filler: {
+
+  },
   date: {
     justifyContent: 'flex-start',
     fontSize: 11,
     color: '#999999',
     fontWeight: '500'
+  },
+  tag: {
+    marginRight: 5,
+    shadowColor: "#000000",
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    shadowOffset: {
+      height: 1,
+      width: 0
+    },
+    color: '#007fff',
+    fontSize: 10,
+    fontWeight: 'bold'
   },
   location: {
     justifyContent: 'flex-end',

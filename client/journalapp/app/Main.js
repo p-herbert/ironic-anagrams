@@ -77,7 +77,7 @@ export default class Main extends Component {
         //   })
         //   .catch( err => console.log("ERROR: ", err) );
 
-        this.setState({location: 'San Francisco, CA'});
+        this.setState({location: 'San Franpsycho, CA'});
       },
       (error) => alert(JSON.stringify(error)),
       {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
@@ -105,6 +105,10 @@ export default class Main extends Component {
       .then( resp => { resp.json()
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          json.map(function(entry){
+            entry.tags = JSON.parse(entry.tags);
+            return entry;
+          });
           this.setState({
             entries: ds.cloneWithRows(json)
           })
@@ -119,9 +123,32 @@ export default class Main extends Component {
   // Enter a new entry for the user. This method is here rather than in EntryTab.js so that the user may use the 
   // publish onPress method.
   postEntry(navigator){
+    var text = this.state.newEntry;
+    let tags = [];
+    let tag = '';
+    let partOfTag = false; 
+    for (var i = 0; i < text.length; i ++) {
+      if (this.state.newEntry[i] === '#') {
+        partOfTag = true;
+      }
+      if (partOfTag === true) {
+        if ((this.state.newEntry[i] !== ' ' && this.state.newEntry[i] !== ',') || this.state.newEntry[i] === '#') {
+          tag = tag.concat(this.state.newEntry[i]);
+        } else {
+          if(tag !== '#'){
+            tags.push(tag);
+          }
+          tag = '';
+          partOfTag = false;
+        }
+      }
+    }
+    if (tag !== '' && tag !== '#') {
+      tags.push(tag);
+      tag = '';
+    }
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      var newEntry = { text: this.state.newEntry, location: this.state.location };
-
+      var newEntry = { text: this.state.newEntry, location: this.state.location, tags: JSON.stringify(tags)};
       fetch('http://localhost:3000/api/entries', {
         method: 'POST',
         headers: {

@@ -17,7 +17,7 @@ var Entry = (props) => (
     <View style={ styles.row }>
       <View style={ styles.rowHeader }>
         <Text style={ styles.date }>
-          { parseDate(props.createdAt) }
+          { parseDate(props) }
         </Text>
         <Text style={ styles.location }>
           { props.location }
@@ -28,13 +28,28 @@ var Entry = (props) => (
           { props.text }
         </Text>
       </View>
+      <View style= { styles.rowFooter }>
+        <Text style= {styles.filler}>
+        </Text>
+        { createTags(props) } 
+      </View>
     </View>
   </View>
 );
 
 module.exports = Entry;
 
-var parseDate = (date) => {
-  date = new Date(date);
+var parseDate = (props) => {
+  date = new Date(props.createdAt);
   return DateFormatter(date, "ddd, mmm d");
 };
+
+var createTags = (props) => {
+  return props.tags.map(function(tag){
+    return (
+        <Text style= { styles.tag }>
+          { tag }
+        </Text>
+      );
+  });
+}
