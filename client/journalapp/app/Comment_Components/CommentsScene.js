@@ -34,7 +34,7 @@ export default class CommentsScene extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       testData: ds.cloneWithRows(data),
-      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500}},
+      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
       comment: ''
     };
 

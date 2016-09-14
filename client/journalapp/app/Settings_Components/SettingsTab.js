@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import styles from '../styles/SettingsTabStyles';
 import Prompt from 'react-native-prompt';
 
-var warningMessage = 'Once you delete all entries, you can\'t undo this. Are you sure you\'d like to proceed?'
+var warningMessage = 'Once you delete all entries, you can\'t undo this. Are you sure you\'d like to proceed?';
 
 // () => this.props.deleteEntries(this.state.username)
 export default class SettingsTab extends Component {
@@ -28,13 +28,13 @@ export default class SettingsTab extends Component {
     this.state = {
       username: '',
       deletePromptVis: false
-    }
+    };
     AsyncStorage.getItem('@MySuperStore:username', (err, username) => {
       this.setState({
         username: username
       });
     });
-  };
+  }
 
   render() {
 
