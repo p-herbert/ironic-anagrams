@@ -34,9 +34,16 @@ export default class CommentsScene extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       testData: ds.cloneWithRows(data),
-      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500}}
+      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500}},
+      comment: ''
     };
 
+  }
+
+  updateComment(text) {
+    this.setState({
+      comment: text
+    });
   }
 
   render() {
@@ -47,15 +54,19 @@ export default class CommentsScene extends Component {
             marginLeft: 0,
             borderBottomWidth: 0.5,
             borderColor: '#cccccc',
-            paddingBottom: 16}
-        }>
+            paddingBottom: 49}}>
           <TextInput
               keyboardType='default'
               keyboardAppearance='light'
               multiline={ true }
               placeholder= 'Comment...'
+              onChangeText={ (text) => this.updateComment(text) }
               style={ [this.state.dynamicHeight(), styles.bodyWidth, styles.fadedText] }
               maxLength={ 100 }/>
+          <View style={ [styles.bodyWidth, styles.footer] }>
+            <Text style={ [styles.footerContent, styles.footerText] }>{ 100 - this.state.comment.length + ' characters left'}</Text>
+            <Text style={ [styles.footerContent, styles.footerArrow] }>{ 'Publish' }</Text>
+          </View>
         </View>
         <CommentList entries={this.state.testData}/>
       </View>
