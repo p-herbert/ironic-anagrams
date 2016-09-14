@@ -46,7 +46,6 @@ module.exports = Entry;
 
 
 var createTags = (props) => {
-  console.log('We reached this part: ', props);
   if (props.tags) {
     return props.tags.map(function(tag) {
       return (
