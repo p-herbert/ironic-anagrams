@@ -21,7 +21,7 @@ var findUsername = (id, users) => {
   }
 };
 
-var EntryList = ({entries, users}) => (
+var EntryList = ({entries, users, navigator}) => (
     <ListView style ={styles.container}
        dataSource={entries}
        renderRow={ (rowData) =>
@@ -30,9 +30,9 @@ var EntryList = ({entries, users}) => (
             createdAt={ rowData.createdAt } 
             location={ rowData.location } 
             username= { findUsername(rowData.userId, users) }
-            tags={ rowData.tags }/>
+            tags={ rowData.tags }
+            navigator={navigator}/>
     }/>
-
 )
 
 module.exports = EntryList;
