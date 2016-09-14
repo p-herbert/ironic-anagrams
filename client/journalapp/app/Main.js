@@ -98,8 +98,8 @@ export default class Main extends Component {
   // if the user has navigated over to that friend's profile. Note that it will be called on the entry tab's 
   // mount and also after the user makes a new entry (so it'll autorefresh the entry list).
   getEntries(tabs){
-    tabs = ['#hash'];
-    tabs = tabs || '[]';
+    //tabs is an array of strings like ['#hash', '#test']
+    tabs = JSON.stringify(tabs) || '[]';
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       fetch(`http://localhost:3000/api/entries?tags=${tabs}`, {
         method: 'GET',
@@ -111,6 +111,7 @@ export default class Main extends Component {
       })
       .then( resp => { resp.json()
         .then( json => {
+          console.log(json);
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             entries: ds.cloneWithRows(json)
