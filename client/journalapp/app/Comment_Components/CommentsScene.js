@@ -44,9 +44,36 @@ export default class CommentsScene extends Component {
       testData: ds.cloneWithRows(data),
       dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
       comment: '',
-      entryId: props.entryId
+      entryId: this.props.entryId,
+      userId: this.props.userId,
+      comments: ds.cloneWithRows([])
     };
 
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+      fetch(`http://localhost:3000/api/comments?entryId=${this.state.entryId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        query: JSON.stringify(this.state.entryId)
+      })
+      .then( resp => { resp.json()
+        .then( json => {
+          console.log(json);
+          const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+          this.setState({
+            comments: ds.cloneWithRows(json)
+          });
+        })
+        .catch((error) => {
+          console.warn("fetch error on get request:", error);
+        });
+      });
+    });
   }
 
   updateComment(text) {
@@ -83,7 +110,7 @@ export default class CommentsScene extends Component {
             width: Dimensions.get('window').width * .93,
             marginLeft: Dimensions.get('window').width * .035,
             marginRight:Dimensions.get('window').width * .035}}>
-          <CommentList entries={this.state.testData}/>
+          <CommentList entries={this.state.comments}/>
         </View>
       </View>
     )
