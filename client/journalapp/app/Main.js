@@ -275,7 +275,7 @@ export default class Main extends Component {
     } else if (route.title === 'CommentsScene') {
       console.log('Route to Comments Scene');
       return (
-        <CommentsScene entryId={route.entryId}/>
+        <CommentsScene entryId={route.entryId} userId={route.userId} location={this.state.location}/>
       )
     }
   }
