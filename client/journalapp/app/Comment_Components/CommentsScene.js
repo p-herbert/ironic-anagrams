@@ -43,7 +43,8 @@ export default class CommentsScene extends Component {
     this.state = {
       testData: ds.cloneWithRows(data),
       dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
-      comment: ''
+      comment: '',
+      entryId: props.entryId
     };
 
   }

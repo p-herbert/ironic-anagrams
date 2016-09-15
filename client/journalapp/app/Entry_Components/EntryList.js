@@ -25,10 +25,10 @@ var EntryList = ({entries, users, navigator}) => (
     <ListView style ={styles.container}
        dataSource={entries}
        renderRow={ (rowData) =>
-          <Entry 
-            text={ rowData.text } 
-            createdAt={ rowData.createdAt } 
-            location={ rowData.location } 
+          <Entry
+            text={ rowData.text }
+            createdAt={ rowData.createdAt }
+            location={ rowData.location }
             username= { findUsername(rowData.userId, users) }
             tags={ rowData.tags }
             id = {rowData.id}
