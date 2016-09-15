@@ -37,7 +37,7 @@ export default class SignupTab extends Component {
       password: this.state.password
     });
 
-    if (this.formStatus()){
+    if (this.formStatus()) {
       fetch('http://localhost:3000/api/signup', {
         method: 'POST',
         headers: {
@@ -45,11 +45,12 @@ export default class SignupTab extends Component {
         },
         body: newUser
       })
-      .then( resp => { resp.json()
+      .then( resp => { 
+        resp.json()
         .then( json => {
           try {
             AsyncStorage.multiSet([['@MySuperStore:token', json.token], ['@MySuperStore:username', this.state.username]], (err) => {
-              if ( err ){ console.warn(err); }
+              if ( err ) { console.warn(err); }
               this.props.updateStatus(true);
             });
           } catch (error) {
@@ -61,10 +62,10 @@ export default class SignupTab extends Component {
   }
 
   formStatus() {
-    if (this.state.username.length !==0 && this.state.fullname.length !==0 && this.state.password.length !==0 ){
-     return true
+    if (this.state.username.length !== 0 && this.state.fullname.length !== 0 && this.state.password.length !== 0 ) {
+      return true;
     } else {
-    return false
+      return false;
     }
   }
 

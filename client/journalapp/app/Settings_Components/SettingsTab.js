@@ -27,18 +27,51 @@ export default class SettingsTab extends Component {
     this.props = props;
     this.state = {
       username: '',
-      deletePromptVis: false
+      deletePromptVis: false,
+      password: ''
     };
-    AsyncStorage.getItem('@MySuperStore:username', (err, username) => {
+
+    AsyncStorage.getItem('@MySuperStore:username')
+    .then( username => {
       this.setState({
         username: username
       });
+      return AsyncStorage.getItem('@MySuperStore:password');
+    })
+    .then( password => {
+      this.setState({
+        password: password
+      });
+    })
+    .done();
+  }
+
+  deleteAcct() {
+    var toDelete = JSON.stringify({
+      username: this.state.username,
+      password: this.state.password
+    });
+    
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+
+      fetch('http://localhost:3000/api/account', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        body: toDelete
+      })
+      .then(resp => {
+        console.log('delete user successful');
+        resp.json();
+      })
+      .catch(err => console.log('Error: ', err));
     });
   }
 
   render() {
-
-   return (
+    return (
       <View style={ styles.container }>
         <Text style={ styles.subHeader }>Profile information</Text>
         <TouchableHighlight>
@@ -49,6 +82,7 @@ export default class SettingsTab extends Component {
             </View>
           </View>
         </TouchableHighlight>
+
         <TouchableHighlight onPress={ () => this.setState({deletePromptVis: true}) }>
           <View style={ styles.rowContainer }>
             <View style={ styles.row }>
@@ -69,9 +103,10 @@ export default class SettingsTab extends Component {
             }
             }/>
 
-        <Button onPress= { () => this.props.signOut() } style={ {padding: 20} }>Sign Out</Button>
+        <Button onPress= { () => this.props.signOut() } style={ {marginTop: 10, padding: 20, backgroundColor: 'white'} }>Sign Out</Button>
+        <Button onPress= { () => { console.log('deleting'); this.deleteAcct(); this.props.signOut(); } } style={ {marginTop: 10, padding: 20, color: 'red', backgroundColor: 'white'} }>Delete Account</Button>
       </View>
-   )
- }
+   );
+  }
 }
 

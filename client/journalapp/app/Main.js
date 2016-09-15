@@ -92,6 +92,7 @@ export default class Main extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
+//TODO: CBELLE
   deleteEntries(username, password){
     console.log(username, password);
   }
