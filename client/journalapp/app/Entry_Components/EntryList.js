@@ -36,10 +36,13 @@ var EntryList = ({entries, users, navigator}) => (
             location={ rowData.location } 
             username= { findUsername(rowData.userId, users) }
             tags={ rowData.tags }
-            navigator={navigator}/>);
-       } 
-    }/>
-);
+            navigator={navigator}/>
+            id = {rowData.id}
+            navigator={navigator}/>
+         )
+      }
+    }
+)
 
 module.exports = EntryList;
 
