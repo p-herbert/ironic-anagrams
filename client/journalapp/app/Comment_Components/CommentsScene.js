@@ -13,8 +13,16 @@ import {
 
 import CommentList from './CommentList';
 import styles from '../styles/MessageSceneStyles';
+import stylesEntriesTab from '../styles/EntriesTabStyles';
 
 var data = [{text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
+  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
   {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
   {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
   {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
@@ -68,7 +76,14 @@ export default class CommentsScene extends Component {
             <Text style={ [styles.footerContent, styles.footerArrow] }>{ 'Publish' }</Text>
           </View>
         </View>
-        <CommentList entries={this.state.testData}/>
+        <View style={{
+            position: 'relative',
+            height: Dimensions.get('window').height - 70,
+            width: Dimensions.get('window').width * .93,
+            marginLeft: Dimensions.get('window').width * .035,
+            marginRight:Dimensions.get('window').width * .035}}>
+          <CommentList entries={this.state.testData}/>
+        </View>
       </View>
     )
   }
