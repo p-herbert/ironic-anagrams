@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   tag: {
     marginRight: 5,
-    shadowColor: "#000000",
+    shadowColor: '#000000',
     shadowOpacity: 0.3,
     shadowRadius: 1,
     shadowOffset: {
