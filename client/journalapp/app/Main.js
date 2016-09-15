@@ -130,7 +130,7 @@ export default class Main extends Component {
     tabs = JSON.stringify(tabs) || '[]';
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      console.log(store);
+      console.log(store, 'store');
       var token = store[0][1];
       var url = store[1][1];
       fetch(`${ url }api/entries?tags=${tabs}`, {
@@ -150,7 +150,7 @@ export default class Main extends Component {
           });
         })
         .catch((error) => {
-          console.warn("fetch error on getrequest:", error);
+          console.warn("fetch error on get request:", error);
         });
       });
     });
