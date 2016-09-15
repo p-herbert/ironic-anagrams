@@ -46,20 +46,22 @@ export default class CommentsScene extends Component {
       comment: '',
       entryId: this.props.entryId,
       userId: this.props.userId,
+      location: this.props.location,
       comments: ds.cloneWithRows([])
     };
 
   }
 
   componentDidMount() {
+    var id = JSON.stringify(this.state.entryId);
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      fetch(`http://localhost:3000/api/comments?entryId=${this.state.entryId}`, {
+      fetch(`http://localhost:3000/api/comments?entryId=${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
         },
-        query: JSON.stringify(this.state.entryId)
+        query: id
       })
       .then( resp => { resp.json()
         .then( json => {
@@ -82,6 +84,32 @@ export default class CommentsScene extends Component {
     });
   }
 
+  publishComment() {
+
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+
+      var newComment = { text: this.state.comment, location: this.state.location, userId: this.state.userId, entryId: this.state.entryId};
+
+      fetch('http://localhost:3000/api/comments', {
+        method: 'POST',
+        headers: {
+         'Content-Type': 'application/json',
+         'x-access-token': token
+        },
+        body: JSON.stringify(newComment)
+      })
+      .then((response) => {
+        this.setState({
+          comment: '',
+        });
+        this.refs['textBox'].setNativeProps({text: ''});
+      })
+      .catch((error) => {
+        console.warn("fetch error:", error);
+      });
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -92,6 +120,7 @@ export default class CommentsScene extends Component {
             borderColor: '#cccccc',
             paddingBottom: 49}}>
           <TextInput
+              ref={'textBox'}
               keyboardType='default'
               keyboardAppearance='light'
               multiline={ true }
@@ -101,7 +130,7 @@ export default class CommentsScene extends Component {
               maxLength={ 100 }/>
           <View style={ [styles.bodyWidth, styles.footer] }>
             <Text style={ [styles.footerContent, styles.footerText] }>{ 100 - this.state.comment.length + ' characters left'}</Text>
-            <Text style={ [styles.footerContent, styles.footerArrow] }>{ 'Publish' }</Text>
+            <Text style={ [styles.footerContent, styles.footerArrow]} onPress={ () => { this.publishComment() } }>{ 'Publish' }</Text>
           </View>
         </View>
         <View style={{
