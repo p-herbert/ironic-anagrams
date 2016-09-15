@@ -21,6 +21,7 @@ import FriendScene from './Friend_Components/FriendScene';
 import MessageScene from './Entry_Components/MessageScene';
 import SearchFriends from './Friend_Components/SearchFriends';
 import CommentsScene from './Comment_Components/CommentsScene';
+import FeedTab from './Friend_Components/FeedTab';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -174,6 +175,10 @@ export default class Main extends Component {
     });
   }
 
+  filterTags() {
+    console.log('Fetching new posts based on tag filtering');
+  }
+
   // According to the state's current page, return a certain tab view. Tab views are all stateful, and will
   // potentially contain logic to interact with the server, or navigate to scenes using the Navigator. This
   // is essentially the tab's router.
@@ -187,6 +192,10 @@ export default class Main extends Component {
                                                     updateFriend={ this.updateFriend.bind(this) }/>;
     if (this.state.page === "SettingsTab") return <SettingsTab
                                                     signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>;
+    if (this.state.page === "FeedTab") return <FeedTab
+                                                    navigator={ navigator }
+                                                    filterTags= {this.filterTags.bind(this) }/>; //this method Julian has written
+
   }
 
   // This logic applies routing according the title of the current route. It will be activated whenever the
@@ -215,6 +224,11 @@ export default class Main extends Component {
               <Text
                 style={styles.tabbartext}>
                 Entries</Text>
+            </View>
+
+            <View name="FeedTab" style={styles.tabbarView}>
+              <Image style={styles.tabbarimage} source={require('./images/ic_list_3x.png')}/>
+              <Text style={styles.tabbartext}>Feed</Text>
             </View>
 
             <View
@@ -347,6 +361,9 @@ export default class Main extends Component {
                 // Title views for the settings route.
                 if (this.state.page === 'SettingsTab') {
                   return (<Text style={ styles.title }>{ 'Settings' }</Text>);
+                }
+                if (this.state.page === 'FeedTab') {
+                  return (<Text style={ styles.title }>{ 'Your Friend Feed' }</Text>);
                 }
 
                 else {

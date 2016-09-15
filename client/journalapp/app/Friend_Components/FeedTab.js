@@ -32,13 +32,12 @@ export default class FeedTab extends Component {
   }
 
   componentWillMount() {
-    this.getFriends();
-    this.getFriendRequests();
+    this.getFriends(() => this.getAllFriendsMessages());
   }
 
   // This will happen when the component is mounted, and will show a list (via FriendsList) of 
   // friends (via Friend).
-  getFriends() {
+  getFriends(callback) {
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       fetch('http://localhost:3000/api/friends', {
         method: 'GET',
@@ -51,8 +50,7 @@ export default class FeedTab extends Component {
         resp.json().then( json => {
           if (json.name !== 'SequelizeDatabaseError') {
             this.setState({ friendList: json });
-            //Only call this once the friend request has returned
-            this.getAllFriendsMessages();
+            callback(json);
           }
         })
         .catch((error) => {
@@ -75,8 +73,11 @@ export default class FeedTab extends Component {
       if (count === this.state.friendList.length) {
         console.log('Update the list entries');
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        //Sort the entries by date
+        var cloneMessages = this.state.allMessages.slice();
+        cloneMessages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         this.setState({
-          entries: ds.cloneWithRows(this.state.allMessages)
+          entries: ds.cloneWithRows(cloneMessages)
         });
         console.log(this.state.entries);
       }
@@ -99,15 +100,6 @@ export default class FeedTab extends Component {
       .then( resp => { 
         resp.json().then( json => {
           console.log('Fetched friends posts', json);
-
-          json.map(function(entry) {
-            console.log('Mapping: ', entry);
-            if (entry.tags) {
-              entry.tags = JSON.parse(entry.tags);
-            }
-            return entry;
-          });
-          //const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             allMessages: this.state.allMessages.concat(json)
           });
@@ -126,9 +118,10 @@ export default class FeedTab extends Component {
     return (
       <View style= { styles.container } >
         <ScrollView>
-          <Text style={ styles.subHeader } >Your News Feed</Text>
           <EntryList
-            entries={ this.state.entries } users={this.state.friendList} />
+            entries={ this.state.entries } 
+            users={this.state.friendList}
+            navigator={this.props.navigator} />
         </ScrollView>
       </View>
     );
