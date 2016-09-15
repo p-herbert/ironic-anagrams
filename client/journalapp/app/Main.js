@@ -93,8 +93,32 @@ export default class Main extends Component {
   }
 
 //TODO: CBELLE
-  deleteEntries(username, password){
-    console.log(username, password);
+//client sends over in delete req
+  deleteEntries(username, secret) {
+    console.log(username, secret);
+
+    var toBeDeleted = {
+      username: username
+    }
+
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+      if (secret.toLowerCase() === 'request') {
+        //send delete req
+        fetch('http://localhost:3000/api/entries', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+          },
+          body: JSON.stringify(toBeDeleted)
+        })
+        .then(resp => {
+          console.log('User entries deleted.');
+          resp.json();
+        })
+        .catch(err => console.log('Error: ', err));
+      }
+    });
   }
 
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for

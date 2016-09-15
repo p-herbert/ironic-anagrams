@@ -92,6 +92,7 @@ export default class SettingsTab extends Component {
             </View>
           </View>
         </TouchableHighlight>
+
         <Prompt
             title="Type Password to Confirm"
             placeholder="Password"
@@ -104,7 +105,7 @@ export default class SettingsTab extends Component {
             }/>
 
         <Button onPress= { () => this.props.signOut() } style={ {marginTop: 10, padding: 20, backgroundColor: 'white'} }>Sign Out</Button>
-        <Button onPress= { () => { console.log('deleting'); this.deleteAcct(); this.props.signOut(); } } style={ {marginTop: 10, padding: 20, color: 'red', backgroundColor: 'white'} }>Delete Account</Button>
+        <Button onPress= { () => { this.deleteAcct(); this.props.signOut(); } } style={ {marginTop: 10, padding: 20, color: 'red', backgroundColor: 'white'} }>Delete Account</Button>
       </View>
    );
   }
