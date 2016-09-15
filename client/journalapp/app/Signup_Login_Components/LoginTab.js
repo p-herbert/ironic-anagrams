@@ -35,8 +35,9 @@ export default class LoginTab extends Component {
       password: this.state.password
     });
 
-    if (this.formStatus()) {
-      fetch('http://localhost:3000/api/signin', {
+
+    if (this.formStatus()){
+      fetch(`${this.props.url}api/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
