@@ -55,7 +55,8 @@ export default class FriendScene extends Component {
   render() {
     return (
       <View style = { styles.container }>
-        <EntryList entries={ this.state.entries } />
+        <EntryList entries={ this.state.entries }
+                   navigator={ this.props.navigator } />
       </View>
     )
   }
