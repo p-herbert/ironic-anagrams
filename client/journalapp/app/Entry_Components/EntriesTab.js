@@ -46,7 +46,7 @@ export default class EntriesTab extends Component {
             <Image style={ styles.tabbarimage } source={require('./../images/Pen_Icon.png')}/>
           </Button>
         </View>
-        <EntryList entries={ this.props.entries } navigator={this.props.navigator}/>
+        <EntryList entries={ this.props.entries } navigator={ this.props.navigator }/>
       </View>
 
      );

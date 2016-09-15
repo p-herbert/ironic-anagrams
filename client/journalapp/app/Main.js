@@ -164,7 +164,7 @@ export default class Main extends Component {
       var token = store[0][1];
       var url = store[1][1];
       var newEntry = { text: this.state.newEntry, location: this.state.location, tags: tags};
-      fetch(`${ url }/api/entries`, {
+      fetch(`${ url }api/entries`, {
         method: 'POST',
         headers: {
          'Content-Type': 'application/json',

@@ -24,16 +24,20 @@ var findUsername = (id, users) => {
 var EntryList = ({entries, users, navigator}) => (
     <ListView style ={styles.container}
        dataSource={entries}
-       renderRow={ (rowData) =>
-          <Entry
-            text={ rowData.text }
-            createdAt={ rowData.createdAt }
-            location={ rowData.location }
+       enableEmptySections={true}
+       renderRow={ (rowData, sectionID, rowID) => {
+         //console.log('Row Data: ', rowData);
+         //key is just not working... i give up
+         return (<Entry
+            key={rowID}
+            id={rowData.id} 
+            text={ rowData.text } 
+            createdAt={ rowData.createdAt } 
+            location={ rowData.location } 
             username= { findUsername(rowData.userId, users) }
             tags={ rowData.tags }
-            entryId = {rowData.id}
-            userId = {rowData.userId}
-            navigator={navigator}/>
+            navigator={navigator}/>);
+       } 
     }/>
 );
 

@@ -67,8 +67,7 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     alignSelf:'flex-end',
-    flexDirection: 'column',
-    color:"#c7c7cc",
+    flexDirection: 'column'
   },
   title: {
     marginTop: 5,
