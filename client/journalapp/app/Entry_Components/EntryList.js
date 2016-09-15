@@ -31,7 +31,8 @@ var EntryList = ({entries, users, navigator}) => (
             location={ rowData.location }
             username= { findUsername(rowData.userId, users) }
             tags={ rowData.tags }
-            id = {rowData.id}
+            entryId = {rowData.id}
+            userId = {rowData.userId}
             navigator={navigator}/>
     }/>
 );
