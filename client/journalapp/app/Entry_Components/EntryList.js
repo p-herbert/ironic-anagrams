@@ -35,9 +35,11 @@ var EntryList = ({entries, users, navigator}) => (
             tags={ rowData.tags }
             entryId = {rowData.id}
             userId = {rowData.userId}
-            navigator={navigator}/>);
-        }}/>
-  );
+            navigator={navigator}/>
+         )
+      }
+    }/>
+)
 
 module.exports = EntryList;
 
