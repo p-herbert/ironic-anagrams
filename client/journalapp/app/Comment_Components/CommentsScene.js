@@ -46,10 +46,9 @@ export default class CommentsScene extends Component {
         query: id
       })
       .then( resp => { resp.json()
-        .then( json => {
-          console.log(json);
+        .then( comments => {
           this.setState({
-            comments: this.state.comments.concat(json)
+            comments: this.state.comments.concat(comments)
           });
         })
         .catch((error) => {
@@ -69,7 +68,11 @@ export default class CommentsScene extends Component {
 
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
 
-      var newComment = { text: this.state.comment, location: this.state.location, userId: this.state.userId, entryId: this.state.entryId};
+      var newComment = {
+        text: this.state.comment,
+        location: this.state.location,
+        userId: this.state.userId,
+        entryId: this.state.entryId};
 
       fetch('http://localhost:3000/api/comments', {
         method: 'POST',
@@ -80,10 +83,10 @@ export default class CommentsScene extends Component {
         body: JSON.stringify(newComment)
       })
       .then( resp => { resp.json()
-        .then( json => {
+        .then( comment => {
 
           this.refs.textBox.setNativeProps({text: ''});
-          this.state.comments.push(json);
+          this.state.comments.push(comment);
 
           this.setState({
             comment: '',
@@ -100,7 +103,6 @@ export default class CommentsScene extends Component {
 
   makeDataSource(data) {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     return ds.cloneWithRows(data);
   }
 
@@ -108,7 +110,6 @@ export default class CommentsScene extends Component {
     return this.state.maxLength - str + ' characters left';
   }
   render() {
-
 
     return (
       <View style={styles.container}>
