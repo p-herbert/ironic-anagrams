@@ -95,7 +95,7 @@ export default class CommentsScene extends Component {
 
         })
         .catch((error) => {
-          console.warn("fetch error:", error);
+          console.warn("fetch error: ", error);
         });
       });
     });
@@ -109,6 +109,7 @@ export default class CommentsScene extends Component {
   charsLeft(str) {
     return this.state.maxLength - str + ' characters left';
   }
+
   render() {
 
     return (

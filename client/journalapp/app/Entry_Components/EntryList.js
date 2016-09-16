@@ -38,7 +38,7 @@ var EntryList = ({entries, users, navigator}) => (
             navigator={navigator}/>
          )
       }
-    }
+    }/>
 )
 
 module.exports = EntryList;
