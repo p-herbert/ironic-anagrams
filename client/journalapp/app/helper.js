@@ -133,6 +133,22 @@ export default class helpers {
     return {tags: tags, ats: ats, inputs: inputs};
 }
 
+emailArray(userArray) {
+  var allEmails = [];
+  userArray.forEach(function(user){
+    allEmails.push(user.username);
+  });
+  Communications.email(allEmails, null, null, null, null);
+}
+
+textArray(userArray) {
+  var allNums = [];
+  userArray.forEach(function(user){
+    allNums.push(user.phoneNumber);
+  });
+  Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
+}
+
 parsePhoneNumber(phoneNum){
   //Highest Priority
   return phoneNum.match(/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/);
@@ -199,14 +215,18 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          console.log(json);
+          var allNums = [];
+          json.forEach(function(user){
+            allNums.push(user.phoneNumber);
+          });
+          Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
         })
         .catch((error) => {
-          console.warn("error on json():", error)
+          console.warn("error on json():", error);
         });
       })
       .catch( error => {
-        console.log("error on fetch()", error)
+        console.log("error on fetch()", error);
       });
     });
   };
