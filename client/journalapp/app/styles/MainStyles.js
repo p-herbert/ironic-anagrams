@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginRight: 10,
     height: 53,
-    fontSize: 14,
+    //fontSize: 14,
   }
 });
 
