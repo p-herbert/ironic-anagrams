@@ -43,9 +43,41 @@ export default class CommentsScene extends Component {
     this.state = {
       testData: ds.cloneWithRows(data),
       dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
-      comment: ''
+      comment: '',
+      entryId: this.props.entryId,
+      userId: this.props.userId,
+      location: this.props.location,
+      comments: []
     };
 
+  }
+
+  componentDidMount() {
+
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    var id = JSON.stringify(this.state.entryId);
+
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+      fetch(`http://localhost:3000/api/comments?entryId=${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        },
+        query: id
+      })
+      .then( resp => { resp.json()
+        .then( json => {
+          console.log(json);
+          this.setState({
+            comments: this.state.comments.concat(json)
+          });
+        })
+        .catch((error) => {
+          console.warn("fetch error on get request:", error);
+        });
+      });
+    });
   }
 
   updateComment(text) {
@@ -54,7 +86,48 @@ export default class CommentsScene extends Component {
     });
   }
 
+  publishComment() {
+
+    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+
+      var newComment = { text: this.state.comment, location: this.state.location, userId: this.state.userId, entryId: this.state.entryId};
+
+      fetch('http://localhost:3000/api/comments', {
+        method: 'POST',
+        headers: {
+         'Content-Type': 'application/json',
+         'x-access-token': token
+        },
+        body: JSON.stringify(newComment)
+      })
+      .then( resp => { resp.json()
+        .then( json => {
+
+          this.refs.textBox.setNativeProps({text: ''});
+          this.state.comments.push(json);
+
+          this.setState({
+            comment: '',
+            comments: this.state.comments
+          });
+
+        })
+        .catch((error) => {
+          console.warn("fetch error:", error);
+        });
+      });
+    });
+  }
+
+  makeDataSource(data) {
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+    return ds.cloneWithRows(data);
+  }
+
   render() {
+
+
     return (
       <View style={styles.container}>
         <View style={
@@ -64,6 +137,7 @@ export default class CommentsScene extends Component {
             borderColor: '#cccccc',
             paddingBottom: 49}}>
           <TextInput
+              ref={'textBox'}
               keyboardType='default'
               keyboardAppearance='light'
               multiline={ true }
@@ -73,7 +147,7 @@ export default class CommentsScene extends Component {
               maxLength={ 100 }/>
           <View style={ [styles.bodyWidth, styles.footer] }>
             <Text style={ [styles.footerContent, styles.footerText] }>{ 100 - this.state.comment.length + ' characters left'}</Text>
-            <Text style={ [styles.footerContent, styles.footerArrow] }>{ 'Publish' }</Text>
+            <Text style={ [styles.footerContent, styles.footerArrow]} onPress={ () => { this.publishComment() } }>{ 'Publish' }</Text>
           </View>
         </View>
         <View style={{
@@ -82,7 +156,7 @@ export default class CommentsScene extends Component {
             width: Dimensions.get('window').width * .93,
             marginLeft: Dimensions.get('window').width * .035,
             marginRight:Dimensions.get('window').width * .035}}>
-          <CommentList entries={this.state.testData}/>
+          <CommentList entries={this.makeDataSource(this.state.comments)}/>
         </View>
       </View>
     )
