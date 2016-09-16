@@ -19,6 +19,7 @@ var RequestList = (props) => {
         { props.requestList.map( (request) => {
             return ( <Request fullname={ request.user.fullname } 
                               username={ request.user.username } 
+                              key={ request.id }
                               requestId={ request.id } 
                               acceptFriend={ props.acceptFriend } 
                               rejectFriend={ props.rejectFriend }

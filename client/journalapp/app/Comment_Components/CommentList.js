@@ -13,6 +13,7 @@ import styles from '../styles/EntryListStyles';
 
 var CommentList = (props) => (
     <ListView style ={styles.container}
+       enableEmptySections={true}
        dataSource={props.entries}
        renderRow={ (rowData) =>
           <Comment text={ rowData.text } createdAt={ rowData.createdAt } location={ rowData.location } user = {rowData.username}/>

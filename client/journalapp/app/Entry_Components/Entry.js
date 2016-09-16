@@ -23,21 +23,21 @@ var Entry = (props) => {
             <Text key={props.id + 'f'} style={ styles.username }>
               { props.username }
             </Text>
-            <Text style={ styles.date }>
+            <Text key={props.id + 'g'} style={ styles.date }>
               { parseDate(props.createdAt) }
             </Text>
           </Text>
-          <Text style={ styles.location }>
+          <Text key={props.id + 'h'} style={ styles.location }>
             { parseLocation(props.location) }
           </Text>
         </View>
-        <View style={ styles.rowBody }>
-          <Text style={ styles.entryText }>
+        <View key={props.id + 'i'} style={ styles.rowBody }>
+          <Text key={props.id + 'j'} style={ styles.entryText }>
             { parseText(props.text) }
           </Text>
         </View>
-        <View style= { styles.rowFooter }>
-          <Text style= {styles.filler}>
+        <View key={props.id + 'k'} style= { styles.rowFooter }>
+          <Text key={props.id + 'l'} style= {styles.filler}>
           </Text>
           { createTags(props) }
         </View>
@@ -45,7 +45,7 @@ var Entry = (props) => {
     </View>
   </TouchableOpacity>
   );
-}
+};
 module.exports = Entry;
 
 
@@ -53,7 +53,7 @@ var createTags = (props) => {
   if (props.tags) {
     return props.tags.map(function(tag) {
       return (
-          <Text style= { styles.tag }>
+          <Text key={props.id + 'm' + tag} style= { styles.tag }>
             { tag }
           </Text>
         );

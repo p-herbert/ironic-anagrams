@@ -26,6 +26,7 @@ var EntryList = ({entries, users, navigator}) => (
           //console.log('Row Data: ', rowData);
           //key is just not working... i give up
           return (<Entry
+            enableEmptySections={true}
             key={rowID}
             id={rowData.id} 
             text={ rowData.text } 
