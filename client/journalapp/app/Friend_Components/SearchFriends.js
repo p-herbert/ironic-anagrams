@@ -32,7 +32,7 @@ export default class SearchFriends extends Component {
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url0 = store[1][1];
-      var url = `${url}api/users` + '/?username=' + query;
+      var url = `${url0}api/users` + '/?username=' + query;
 
       fetch(url, {
         method: 'GET',
