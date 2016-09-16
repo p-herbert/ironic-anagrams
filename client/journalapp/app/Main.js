@@ -193,11 +193,7 @@ export default class Main extends Component {
   */
 
   deleteEntries(username, secret) {
-    console.log(username, secret, 'username and password');
-    console.log(this.state.entries, 'entries');
-
     var userEntries = this.state.entries.getRowData(0,0);
-    console.log('User Entires', userEntries);
 
     var toBeDeleted = {
       userId: userEntries.userId
