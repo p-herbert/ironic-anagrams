@@ -158,38 +158,67 @@ parsePhoneNumber(phoneNum){
   parseWeb(web) {
     return web.slice(1).match(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
   };
+
+  atNetwork() {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
+    var token = store[0][1];
+    var url = store[1][1];
+    var ssid = store[2][1];
+    fetch(`${ url }api/users?ssid=${ssid}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token
+      },
+      })
+      .then( resp => { resp.json()
+        .then( json => {
+          console.log(json);
+          /*
+          Linking.openURL('sms://open?addresses=6503846438,4083962431');
+          var phoneNums = [];
+          json.forEach(function(data){
+            phoneNums.push(data.phoneNumber);
+          });
+          */
+        })
+        .catch((error) => {
+          console.warn("fetch error on getrequest:", error);
+        });
+      });
+    });
+  }
+
+  atFriends() {
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
+      fetch(`${url}api/friends`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-token': token
+        }
+      })
+      .then( resp => { resp.json()
+        .then( json => {
+          console.log(json);
+        })
+        .catch((error) => {
+          console.warn("error on json():", error)
+        });
+      })
+      .catch( error => {
+        console.log("error on fetch()", error)
+      });
+    });
+  };
+
   parseSpecial(specialAt) {
     if (specialAt === '@network') {
-      console.log('attempting to send @network');
-      return () => {
-        AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
-        var token = store[0][1];
-        var url = store[1][1];
-        var ssid = store[2][1];
-        fetch(`${ url }api/users?ssid=${ssid}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': token
-          },
-          })
-          .then( resp => { resp.json()
-            .then( json => {
-              console.log(json);
-              /*
-              Linking.openURL('sms://open?addresses=6503846438,4083962431');
-              var phoneNums = [];
-              json.forEach(function(data){
-                phoneNums.push(data.phoneNumber);
-              });
-              */
-            })
-            .catch((error) => {
-              console.warn("fetch error on getrequest:", error);
-            });
-          });
-        });
-      };
+      return this.atNetwork;
+    } else if (specialAt = '@friends') {
+      return this.atFriends;
     }
     return specialAt === '@near' || specialAt === '@network' || specialAt === '@friends';
   };

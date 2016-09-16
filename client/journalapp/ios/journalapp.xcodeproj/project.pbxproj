@@ -100,8 +100,7 @@
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
 		};
-
-		71F9D4FF1D8BB3E9009AD87A /* PBXContainerItemProxy */ = {
+		71F9D5501D8C6D69009AD87A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3D3ED79BF0F84281ACC7F404 /* RNNetworkInfo.xcodeproj */;
 			proxyType = 2;
@@ -310,10 +309,10 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		71F9D5281D8BDAA9009AD87A /* Products */ = {
+		71F9D53A1D8BDB54009AD87A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				71F9D5361D8BDAA9009AD87A /* libRNNetworkInfo.a */,
+				71F9D5511D8C6D69009AD87A /* libRNNetworkInfo.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -503,7 +502,7 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 71F9D4F21D8BB3E9009AD87A /* Products */;
+					ProductGroup = 71F9D53A1D8BDB54009AD87A /* Products */;
 					ProjectRef = 3D3ED79BF0F84281ACC7F404 /* RNNetworkInfo.xcodeproj */;
 				},
 				{
@@ -576,11 +575,11 @@
 			remoteRef = 146834031AC3E56700842450 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		71F9D5361D8BDAA9009AD87A /* libRNNetworkInfo.a */ = {
+		71F9D5511D8C6D69009AD87A /* libRNNetworkInfo.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNNetworkInfo.a;
-			remoteRef = 71F9D5351D8BDAA9009AD87A /* PBXContainerItemProxy */;
+			remoteRef = 71F9D5501D8C6D69009AD87A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		78C398B91ACF4ADC00677621 /* libRCTLinking.a */ = {
