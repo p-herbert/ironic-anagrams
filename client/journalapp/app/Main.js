@@ -1,16 +1,20 @@
+
 import React, { Component } from 'react';
 
 import {
   StyleSheet,
   Text,
+  Alert,
   TextInput,
   ListView,
   View,
+  NetInfo,
   Navigator,
   AsyncStorage,
   Dimensions,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking
 } from 'react-native';
 
 import Tabs from 'react-native-tabs';
@@ -22,11 +26,16 @@ import MessageScene from './Entry_Components/MessageScene';
 import SearchFriends from './Friend_Components/SearchFriends';
 import CommentsScene from './Comment_Components/CommentsScene';
 import FeedTab from './Friend_Components/FeedTab';
-
+import GeoCoder from 'react-native-geocoder';
+GeoCoder.fallbackToGoogle('AIzaSyDQeWhbhQK8oS2sJwwobh1LIBdcnSfw0Go');
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import Communications from 'react-native-communications';
 import styles from './styles/MainStyles';
-
+import NetworkInfo from 'react-native-network-info';
+import helpers from './helper.js';
+helper = new helpers();
+// Linking.openURL('sms://open?addresses=6503846438,4083962431');
+// Communications.text('6503846438, 4083962431', 'test');
 export default class Main extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +47,9 @@ export default class Main extends Component {
       entries: ds.cloneWithRows([]),
       newEntry: '',
       friendName: '',
-      location: ''
+      location: '',
+      phonePrompt: false,
+      ssid: ''
     };
   }
 
@@ -67,29 +78,32 @@ export default class Main extends Component {
   // NOTE: React Native unfortunately uses navigator as a variable in their geolocation. This does not refer to
   // the Navigator component, nor an instance of it.
   componentDidMount() {
+    // NetInfo.addEventListener('change', helper.netListener);
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log(position);
         var latLng = {lat: position.coords.longitude, lng: position.coords.latitude};
         // The GeoCoder needs Xcode configuration to work. For now, use dummy data.
         // to establish connection with server.
+        GeoCoder.geocodePosition(latLng)
+          .then( (res) => {
+            this.setState({location: res.locality + ', ' + res.adminArea});
+          })
+          .catch( err => {
+            console.dir(err) 
+            this.setState({location: latLng['lat'] + ', ' +  latLng['lng']});
+          });
 
-        // GeoCoder.geocodePosition(latLng)
-        //   .then( (res) => {
-        //     this.setState({location: res.locality + ', ' + res.adminArea});
-        //   })
-        //   .catch( err => console.log("ERROR: ", err) );
-
-        this.setState({location: 'San Franpsycho, CA'});
+        // this.setState({location: 'San Franpsycho, CA'});
       },
       (error) => alert(JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+      {enableHighAccuracy: true}
     );
   }
 
   // These lines clear the location that's being watched when the component unmounts.
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
+    // NetInfo.removeEventListener('change', helper.netListener);
   }
 
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for
@@ -101,7 +115,6 @@ export default class Main extends Component {
     tabs = JSON.stringify(tabs) || '[]';
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      console.log(store, 'store');
       var token = store[0][1];
       var url = store[1][1];
       fetch(`${ url }api/entries?tags=${tabs}`, {
@@ -114,8 +127,6 @@ export default class Main extends Component {
       })
       .then( resp => { resp.json()
         .then( json => {
-          console.log(json, 'List of entries');
-          //ListView
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             entries: ds.cloneWithRows(json) //cloneWithRows updates data in DataSource
@@ -132,34 +143,33 @@ export default class Main extends Component {
   // publish onPress method.
   postEntry(navigator){
     var text = this.state.newEntry;
-    let tags = [];
-    let tag = '';
-    let partOfTag = false; 
-    for (var i = 0; i < text.length; i ++) {
-      if (this.state.newEntry[i] === '#') {
-        partOfTag = true;
-      }
-      if (partOfTag === true) {
-        if ((this.state.newEntry[i] !== ' ' && this.state.newEntry[i] !== ',') || this.state.newEntry[i] === '#') {
-          tag = tag.concat(this.state.newEntry[i]);
+    var data = helper.parseText(text);
+    data.ats.forEach(function(at, index, ats) {
+      var phoneNum = helper.parsePhoneNumber(at);
+      if (phoneNum) {
+        helper.phoneAlert(phoneNum);
+        // Communications.text(phoneNum[1] + phoneNum[3] + phoneNum[4], data.inputs[0].toString().slice(1));
+      } else {
+        var email = helper.parseEmail(at);
+        if(email) {
+          Communications.email(ats, null, null, null, data.inputs[0].toString().slice(1));
         } else {
-          if(tag !== '#'){
-            tags.push(tag);
+          var web = helper.parseWeb(at);
+          if (web) {
+            Communications.web(web[0]);
+          } else {
+            var specialAt = helper.parseSpecial(at);
+            if (specialAt) {
+              specialAt();
+            }
           }
-          tag = '';
-          partOfTag = false;
         }
       }
-    }
-    if (tag !== '' && tag !== '#') {
-      tags.push(tag);
-      tag = '';
-    }
-    console.log(tags);
+    });
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url = store[1][1];
-      var newEntry = { text: this.state.newEntry, location: this.state.location, tags: tags};
+      var newEntry = { text: this.state.newEntry, location: this.state.location, tags: data.tags};
       fetch(`${ url }api/entries`, {
         method: 'POST',
         headers: {
@@ -169,6 +179,7 @@ export default class Main extends Component {
         body: JSON.stringify(newEntry)
       })
         .then((response) => {
+          console.log(response);
           this.getEntries();
           navigator.pop();
         })
@@ -424,6 +435,3 @@ export default class Main extends Component {
     )
   }
 }
-
-
-
