@@ -29,7 +29,9 @@ export default class EntriesTab extends Component {
 
   componentDidMount() {
     this.props.getEntries();
+    //swipeout enabled
   }
+  //delete button gets prop of msgId
 
   render() {
 

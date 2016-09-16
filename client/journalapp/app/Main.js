@@ -197,21 +197,10 @@ export default class Main extends Component {
   }
 
   //TODO: CBELLE
-  //client sends over in delete req
-
-  /*
-  var Entry = sequelize.define('entry', {
-    text: Sequelize.STRING,
-    location: Sequelize.STRING,
-    tags: {
-      type: Sequelize.ARRAY(Sequelize.STRING),
-      defaultValue: []
-    }
-  });
-  */
-
-  deleteEntries(username, secret) {
+  deleteEntries(username, secret, msgId) {
     var userEntries = this.state.entries.getRowData(0,0);
+
+    var queryUrl = msgId ? ('?messageId=' + msgId) : '';
 
     var toBeDeleted = {
       userId: userEntries.userId
@@ -221,7 +210,7 @@ export default class Main extends Component {
       var token = store[0][1];
       var url = store[1][1];
       
-      fetch(`${ url }api/entries`, {
+      fetch(`${ url }api/entries${ queryUrl }`, {
         method: 'DELETE',
         headers: {
          'Content-Type': 'application/json',
