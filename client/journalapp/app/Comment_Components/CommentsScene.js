@@ -15,25 +15,6 @@ import CommentList from './CommentList';
 import styles from '../styles/MessageSceneStyles';
 import stylesEntriesTab from '../styles/EntriesTabStyles';
 
-var data = [{text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'},
-  {text: 'Hello World', location: 'Bay Area', createdAt: '2016-09-13T21:45:11.328Z', username: 'Pete'}];
-
 export default class CommentsScene extends Component {
   constructor(props) {
     super(props);
@@ -41,7 +22,6 @@ export default class CommentsScene extends Component {
 
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      testData: ds.cloneWithRows(data),
       dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
       comment: '',
       entryId: this.props.entryId,
