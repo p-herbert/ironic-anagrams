@@ -72,5 +72,5 @@ var parseDate = (date) => {
 
 var click = function() {
   console.log('Entry Clicked');
-}
+};
 

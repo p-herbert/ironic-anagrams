@@ -22,9 +22,9 @@ export default class SearchFriends extends Component {
       text: '',
       results: [],
       iconStyle: {}
-    }
+    };
 
-  };
+  }
 
   // This method fires whenever a user enters input in the input text in this component
   // (see the jsx template below).
@@ -41,27 +41,28 @@ export default class SearchFriends extends Component {
           'x-access-token': token
         }
       })
-      .then( resp => { resp.json()
+      .then( resp => { 
+        resp.json()
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
             text: query,
             results: json
-          })
+          });
         })
         .catch((error) => {
-          console.warn("fetch error on getrequest:", error)
+          console.warn('fetch error on getrequest:', error);
         });
       });
     });
-  };
+  }
 
   // Sending the friend request occurs when the user clicks the friend icon in the SearchResultRow view. 
   sendFriendReq(id, navigator) {
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url = store[1][1];
-      var message = {requestReceiver:id};
+      var message = {requestReceiver: id};
       fetch(`${url}api/friendreq`, {
         method: 'POST',
         headers: {
@@ -76,7 +77,7 @@ export default class SearchFriends extends Component {
             //navigator.pop();
          })
            .catch((error) => {
-             console.warn("fetch error:", error);
+             console.warn('fetch error:', error);
            });
     });
   }
@@ -94,6 +95,6 @@ export default class SearchFriends extends Component {
           sendreq={this.sendFriendReq.bind(this)}
           navigator={this.props.navigator}/>
       </View>
-    )
+    );
   }
 }

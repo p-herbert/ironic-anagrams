@@ -58,13 +58,13 @@ export default class FriendScene extends Component {
             placeholder= 'What did you do today?'
             style={ [this.state.dynamicHeight(), styles.bodyWidth, styles.fadedText] }
             maxLength={ 100 }
-            onChangeText={ (text) => this.props.updateEntry(text) }
+            onChangeText={ (text) => this.props.updateEntry(text) } //input from user here!
             onFocus= { this.moveUpForKeyboardShow.bind(this) }
             onBlur= { this.moveDownForKeyboardHide.bind(this) }/>
         <View style={ [styles.bodyWidth, styles.footer] }>
-          <Icon style={ [styles.footerContent, styles.footerPadlock] } name="lock-open"/>
-          <Icon style={ [styles.footerContent, styles.footerArrow] } name="near-me"/>
-          <Text style={ [styles.footerContent, styles.footerText] }>{ this.props.location }</Text>
+          <Icon style={ [styles.footerContent, styles.footerPadlock] /*part of input box footer*/ } name="lock-open"/>
+          <Icon style={ [styles.footerContent, styles.footerArrow] /*part of input box footer*/} name="near-me"/>
+          <Text style={ [styles.footerContent, styles.footerText] }>{ this.props.location /*why doesn't this show?*/ }</Text>
         </View>
       </ScrollView>
     );

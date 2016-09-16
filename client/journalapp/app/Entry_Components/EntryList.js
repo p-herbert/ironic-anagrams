@@ -25,10 +25,10 @@ var EntryList = ({entries, users, navigator}) => (
     <ListView style ={styles.container}
        dataSource={entries}
        enableEmptySections={true}
-       renderRow={ (rowData, sectionID, rowID) => {
-         //console.log('Row Data: ', rowData);
-         //key is just not working... i give up
-         return (<Entry
+        renderRow={ (rowData, sectionID, rowID) => {
+          //console.log('Row Data: ', rowData);
+          //key is just not working... i give up
+          return (<Entry
             key={rowID}
             id={rowData.id} 
             text={ rowData.text } 
@@ -36,10 +36,11 @@ var EntryList = ({entries, users, navigator}) => (
             location={ rowData.location } 
             username= { findUsername(rowData.userId, users) }
             tags={ rowData.tags }
+            entryId = {rowData.id}
+            userId = {rowData.userId}
             navigator={navigator}/>);
-       } 
-    }/>
-);
+        }}/>
+  );
 
 module.exports = EntryList;
 

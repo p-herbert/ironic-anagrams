@@ -94,9 +94,21 @@ export default class Main extends Component {
 
 //TODO: CBELLE
 //client sends over in delete req
+
+/*
+var Entry = sequelize.define('entry', {
+  text: Sequelize.STRING,
+  location: Sequelize.STRING,
+  tags: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+    defaultValue: []
+  }
+});
+*/
+
   deleteEntries(username, secret) {
     console.log(username, secret);
-
+    //pass in the correct entry id?
     var toBeDeleted = {
       username: username
     }
@@ -143,10 +155,11 @@ export default class Main extends Component {
       })
       .then( resp => { resp.json()
         .then( json => {
-          console.log(json);
+          console.log(json, 'List of entries');
+          //ListView
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
-            entries: ds.cloneWithRows(json)
+            entries: ds.cloneWithRows(json) //cloneWithRows updates data in DataSource
           });
         })
         .catch((error) => {

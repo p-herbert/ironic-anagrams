@@ -98,8 +98,8 @@ export default class SettingsTab extends Component {
             placeholder="Password"
             visible={this.state.deletePromptVis}
             onCancel={() => this.setState({ deletePromptVis: false})}
-            onSubmit={(password) => {
-              this.props.deleteEntries(this.state.username, password);
+            onSubmit={(secret) => {
+              this.props.deleteEntries(this.state.username, secret);
               this.setState({ deletePromptVis: false});
             }
             }/>
