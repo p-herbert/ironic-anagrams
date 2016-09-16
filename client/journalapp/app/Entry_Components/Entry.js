@@ -16,7 +16,7 @@ import styles from '../styles/EntryStyles';
 var Entry = (props) => {
   console.log(props);
   return (
-  <TouchableOpacity key={props.id + 'a'} onPress={() => props.navigator.push({title: 'CommentsScene'})}>
+  <TouchableOpacity key={props.id + 'a'} onPress={() => props.navigator.push({title: 'CommentsScene', entryId: props.entryId, userId: props.userId})}>
     <View key={props.id + 'b'} style={ styles.container }>
       <View key={props.id + 'c'} style={ styles.row }>
         <View key={props.id + 'd'} style={ styles.rowHeader }>
