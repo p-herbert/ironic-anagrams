@@ -20,21 +20,20 @@ export default class CommentsScene extends Component {
     super(props);
     this.props = props;
 
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
       comment: '',
       entryId: this.props.entryId,
       userId: this.props.userId,
       location: this.props.location,
-      comments: []
+      comments: [],
+      maxLength: 100
     };
 
   }
 
   componentDidMount() {
 
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     var id = JSON.stringify(this.state.entryId);
 
     AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
@@ -105,6 +104,9 @@ export default class CommentsScene extends Component {
     return ds.cloneWithRows(data);
   }
 
+  charsLeft(str) {
+    return this.state.maxLength - str + ' characters left';
+  }
   render() {
 
 
@@ -124,9 +126,9 @@ export default class CommentsScene extends Component {
               placeholder= 'Comment...'
               onChangeText={ (text) => this.updateComment(text) }
               style={ [this.state.dynamicHeight(), styles.bodyWidth, styles.fadedText] }
-              maxLength={ 100 }/>
+              maxLength={ this.state.maxLength }/>
           <View style={ [styles.bodyWidth, styles.footer] }>
-            <Text style={ [styles.footerContent, styles.footerText] }>{ 100 - this.state.comment.length + ' characters left'}</Text>
+            <Text style={ [styles.footerContent, styles.footerText] }>{ this.charsLeft(this.state.comment) }</Text>
             <Text style={ [styles.footerContent, styles.footerArrow]} onPress={ () => { this.publishComment() } }>{ 'Publish' }</Text>
           </View>
         </View>
