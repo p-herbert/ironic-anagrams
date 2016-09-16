@@ -14,7 +14,6 @@ import {
 import styles from '../styles/EntryStyles';
 
 var Entry = (props) => {
-  console.log(props);
   return (
   <TouchableOpacity key={props.id + 'a'} onPress={() => props.navigator.push({title: 'CommentsScene', entryId: props.entryId, userId: props.userId})}>
     <View key={props.id + 'b'} style={ styles.container }>
@@ -45,8 +44,8 @@ var Entry = (props) => {
       </View>
     </View>
   </TouchableOpacity>
-);
-
+  );
+}
 module.exports = Entry;
 
 

@@ -173,14 +173,11 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          console.log(json);
-          /*
-          Linking.openURL('sms://open?addresses=6503846438,4083962431');
-          var phoneNums = [];
-          json.forEach(function(data){
-            phoneNums.push(data.phoneNumber);
+          var allNums = [];
+          json.forEach(function(user){
+            allNums.push(user.phoneNumber);
           });
-          */
+          Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
         })
         .catch((error) => {
           console.warn("fetch error on getrequest:", error);
