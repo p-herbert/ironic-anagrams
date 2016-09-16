@@ -50,9 +50,7 @@ export default class Main extends Component {
       entries: ds.cloneWithRows([]),
       newEntry: '',
       friendName: '',
-      location: '',
-      phonePrompt: false,
-      ssid: ''
+      location: ''
     };
   }
 
