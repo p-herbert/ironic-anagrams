@@ -14,7 +14,6 @@ import {
 import styles from '../styles/EntryStyles';
 
 var Entry = (props) => {
-  console.log('test');
   return (
   <TouchableOpacity key={props.id + 'a'} onPress={() => props.navigator.push({title: 'CommentsScene', entryId: props.entryId, userId: props.userId})}>
     <View key={props.id + 'b'} style={ styles.container }>
