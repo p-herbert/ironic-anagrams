@@ -12,10 +12,59 @@ import {
   Dimensions,
   Image,
   TouchableHighlight,
-  Linking
+  Linking,
+  ActionSheetIOS
 } from 'react-native';
 import Communications from 'react-native-communications';
 import NetworkInfo from 'react-native-network-info';
+
+var emailArray = (userArray, input) => {
+  var allEmails = [];
+  userArray.forEach(function(user){
+    allEmails.push(user.username);
+  });
+  Communications.email(allEmails, null, null, null, input);
+};
+
+var textArray = (userArray, input) => {
+  var allNums = [];
+  userArray.forEach(function(user){
+    allNums.push(user.phoneNumber);
+  });
+  var body = ''
+  if (input.length > 0) {
+    body = input[0].slice(1);
+  }
+  Linking.openURL(`sms://open?addresses=${allNums.join(',')}&body=${body}`);
+};
+
+var callArray = (userArray, input) => {
+  var allNums = [];
+  userArray.forEach(function(user){
+    allNums.push(user.phoneNumber);
+  });
+  var body = '';
+  if (input.length > 0) {
+    body = input[0].slice(1);
+  }
+  Linking.openURL(`telprompt://${allNums.join(', ')}`);
+}
+
+var showSpecialAt = (json, input) => {
+  ActionSheetIOS.showActionSheetWithOptions({
+    options:['Call', 'Text', 'Email', 'Cancel'],
+    cancelButtonIndex: 3
+  },
+  (buttonIndex) => {
+    if (buttonIndex === 0){
+      callArray(json, input);
+    } else if(buttonIndex === 1) {
+      textArray(json, input);
+    } else if(buttonIndex === 2) {
+      emailArray(json, input);
+    }
+  });
+};
 
 export default class helpers {
   netListener(reach) {
@@ -133,22 +182,6 @@ export default class helpers {
     return {tags: tags, ats: ats, inputs: inputs};
 }
 
-emailArray(userArray) {
-  var allEmails = [];
-  userArray.forEach(function(user){
-    allEmails.push(user.username);
-  });
-  Communications.email(allEmails, null, null, null, null);
-}
-
-textArray(userArray) {
-  var allNums = [];
-  userArray.forEach(function(user){
-    allNums.push(user.phoneNumber);
-  });
-  Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
-}
-
 parsePhoneNumber(phoneNum){
   //Highest Priority
   return phoneNum.match(/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/);
@@ -175,7 +208,7 @@ parsePhoneNumber(phoneNum){
     return web.slice(1).match(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
   };
 
-  atNetwork() {
+  atNetwork(input) {
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
     var token = store[0][1];
     var url = store[1][1];
@@ -189,20 +222,18 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          var allNums = [];
-          json.forEach(function(user){
-            allNums.push(user.phoneNumber);
-          });
-          Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
+          showSpecialAt(json, input);
         })
         .catch((error) => {
           console.warn("fetch error on getrequest:", error);
         });
       });
     });
-  }
+  };
 
-  atFriends() {
+
+
+  atFriends(input) {
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url = store[1][1];
@@ -215,11 +246,7 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          var allNums = [];
-          json.forEach(function(user){
-            allNums.push(user.phoneNumber);
-          });
-          Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
+          showSpecialAt(json, input);
         })
         .catch((error) => {
           console.warn("error on json():", error);

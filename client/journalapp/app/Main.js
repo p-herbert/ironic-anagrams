@@ -177,6 +177,7 @@ export default class Main extends Component {
         var email = helper.parseEmail(at);
         if(email) {
           Communications.email(ats, null, null, null, data.inputs[0].toString().slice(1));
+          return;
         } else {
           var web = helper.parseWeb(at);
           if (web) {
@@ -184,7 +185,12 @@ export default class Main extends Component {
           } else {
             var specialAt = helper.parseSpecial(at);
             if (specialAt) {
-              specialAt();
+              specialAt(data.inputs);
+            } else {
+              var username  = helper.parseUsername
+              if(username) {
+                
+              }
             }
           }
         }
@@ -214,7 +220,15 @@ export default class Main extends Component {
   }
 
   //TODO: CBELLE
+<<<<<<< a790f4e3b084698bf5bc87035420a5f351a5b659
   deleteEntries(username, secret, msgId) {
+=======
+  //client sends over in delete req
+
+
+
+  deleteEntries(username, secret) {
+>>>>>>> Created a call for multiple people
     var userEntries = this.state.entries.getRowData(0,0);
     console.log('delete entries invoked');
     var toBeDeleted = {
