@@ -8,9 +8,6 @@ import {
   DeviceEventEmitter
 } from 'react-native';
 
-
-
-
 // VB: Refactored require to use import, for consistency
 import Entry from './Entry';
 import styles from '../styles/EntryListStyles';

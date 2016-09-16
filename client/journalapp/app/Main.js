@@ -92,47 +92,6 @@ export default class Main extends Component {
     navigator.geolocation.clearWatch(this.watchID);
   }
 
-//TODO: CBELLE
-//client sends over in delete req
-
-/*
-var Entry = sequelize.define('entry', {
-  text: Sequelize.STRING,
-  location: Sequelize.STRING,
-  tags: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
-    defaultValue: []
-  }
-});
-*/
-
-  deleteEntries(username, secret) {
-    console.log(username, secret);
-    //pass in the correct entry id?
-    var toBeDeleted = {
-      username: username
-    }
-
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-      if (secret.toLowerCase() === 'request') {
-        //send delete req
-        fetch('http://localhost:3000/api/entries', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': token
-          },
-          body: JSON.stringify(toBeDeleted)
-        })
-        .then(resp => {
-          console.log('User entries deleted.');
-          resp.json();
-        })
-        .catch(err => console.log('Error: ', err));
-      }
-    });
-  }
-
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for
   // either the signed in user, when he/she is at his/her profile, or all the entries for a selected friend,
   // if the user has navigated over to that friend's profile. Note that it will be called on the entry tab's
@@ -218,6 +177,54 @@ var Entry = sequelize.define('entry', {
           });
     });
   }
+
+  //TODO: CBELLE
+  //client sends over in delete req
+
+  /*
+  var Entry = sequelize.define('entry', {
+    text: Sequelize.STRING,
+    location: Sequelize.STRING,
+    tags: {
+      type: Sequelize.ARRAY(Sequelize.STRING),
+      defaultValue: []
+    }
+  });
+  */
+
+  deleteEntries(username, secret) {
+    console.log(username, secret, 'username and password');
+    console.log(this.state.entries, 'entries');
+
+    var userEntries = this.state.entries.getRowData(0,0);
+    console.log('User Entires', userEntries);
+
+    var toBeDeleted = {
+      userId: userEntries.userId
+    }
+
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      var token = store[0][1];
+      var url = store[1][1];
+      
+      fetch(`${ url }api/entries`, {
+        method: 'DELETE',
+        headers: {
+         'Content-Type': 'application/json',
+         'x-access-token': token
+        },
+        body: JSON.stringify(toBeDeleted)
+      })
+        .then((response) => {
+          console.log('Delete all entries of user');
+          response.json();
+        })
+        .catch((error) => {
+          console.warn("fetch error:", error);   
+        });
+    });
+  }
+
 
   filterTags() {
     console.log('Fetching new posts based on tag filtering');

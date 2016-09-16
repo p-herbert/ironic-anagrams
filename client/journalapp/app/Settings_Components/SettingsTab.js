@@ -94,8 +94,7 @@ export default class SettingsTab extends Component {
         </TouchableHighlight>
 
         <Prompt
-            title="Type Password to Confirm"
-            placeholder="Password"
+            title="Type Reset to Confirm"
             visible={this.state.deletePromptVis}
             onCancel={() => this.setState({ deletePromptVis: false})}
             onSubmit={(secret) => {
