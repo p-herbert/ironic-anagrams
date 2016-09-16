@@ -24,31 +24,31 @@ export default class helpers {
       NetworkInfo.getSSID(ssid => {
         if (ssid !== 'error') {
           SSID = {ssid: ssid};
-        };
-      });
-    }
-    if (SSID.ssid !== 'UNKNOWN' || SSID.ssid !== 'error') {
-      AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
-        //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-        var token = store[0][1];
-        var url = store[1][1];
-        fetch(`${ url }api/users`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-access-token': token
-          },
-          body: JSON.stringify(SSID)
-        })
-        .then( resp => { 
-          if (resp.status === 204) {
-            AsyncStorage.setItem('@MySuperStore:ssid', SSID.ssid, function(err){
-              if(err) {
-                console.warn(err);
-              }
+          if (SSID.ssid !== 'UNKNOWN' || SSID.ssid !== 'error') {
+            AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+              //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+              var token = store[0][1];
+              var url = store[1][1];
+              fetch(`${ url }api/users`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-access-token': token
+                },
+                body: JSON.stringify(SSID)
+              })
+              .then( resp => { 
+                if (resp.status === 204) {
+                  AsyncStorage.setItem('@MySuperStore:ssid', SSID.ssid, function(err){
+                    if(err) {
+                      console.warn(err);
+                    }
+                  });
+                }
+              });
             });
-          }
-        });
+          };
+        };
       });
     };
   };

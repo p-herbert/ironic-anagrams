@@ -34,6 +34,9 @@ import styles from './styles/MainStyles';
 import NetworkInfo from 'react-native-network-info';
 import helpers from './helper.js';
 helper = new helpers();
+NetworkInfo.getSSID(ssid =>{
+  console.log(ssid);
+});
 // Linking.openURL('sms://open?addresses=6503846438,4083962431');
 // Communications.text('6503846438, 4083962431', 'test');
 export default class Main extends Component {
@@ -78,20 +81,20 @@ export default class Main extends Component {
   // NOTE: React Native unfortunately uses navigator as a variable in their geolocation. This does not refer to
   // the Navigator component, nor an instance of it.
   componentDidMount() {
-    // NetInfo.addEventListener('change', helper.netListener);
+    NetInfo.addEventListener('change', helper.netListener);
     navigator.geolocation.getCurrentPosition(
       (position) => {
         var latLng = {lat: position.coords.longitude, lng: position.coords.latitude};
         // The GeoCoder needs Xcode configuration to work. For now, use dummy data.
         // to establish connection with server.
-        GeoCoder.geocodePosition(latLng)
-          .then( (res) => {
-            this.setState({location: res.locality + ', ' + res.adminArea});
-          })
-          .catch( err => {
-            console.dir(err) 
+        // GeoCoder.geocodePosition(latLng)
+        //   .then( (res) => {
+        //     this.setState({location: res.locality + ', ' + res.adminArea});
+        //   })
+        //   .catch( err => {
+        //     console.dir(err) 
             this.setState({location: latLng['lat'] + ', ' +  latLng['lng']});
-          });
+        //   });
 
         // this.setState({location: 'San Franpsycho, CA'});
       },
@@ -103,7 +106,7 @@ export default class Main extends Component {
   // These lines clear the location that's being watched when the component unmounts.
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
-    // NetInfo.removeEventListener('change', helper.netListener);
+    NetInfo.removeEventListener('change', helper.netListener);
   }
 
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for
