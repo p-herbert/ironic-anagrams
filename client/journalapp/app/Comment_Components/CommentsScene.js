@@ -68,39 +68,44 @@ export default class CommentsScene extends Component {
 
   publishComment() {
 
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+    if (this.state.comment.length > 0) {
 
-      var newComment = {
-        text: this.state.comment,
-        location: this.state.location,
-        userId: this.state.userId,
-        entryId: this.state.entryId};
+      AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
 
-      fetch('http://localhost:3000/api/comments', {
-        method: 'POST',
-        headers: {
-         'Content-Type': 'application/json',
-         'x-access-token': token
-        },
-        body: JSON.stringify(newComment)
-      })
-      .then( resp => { resp.json()
-        .then( comment => {
+        var newComment = {
+          text: this.state.comment,
+          location: this.state.location,
+          userId: this.state.userId,
+          entryId: this.state.entryId};
 
-          this.refs.textBox.setNativeProps({text: ''});
-          this.state.comments.push(comment);
-
-          this.setState({
-            comment: '',
-            comments: this.state.comments
-          });
-
+        fetch('http://localhost:3000/api/comments', {
+          method: 'POST',
+          headers: {
+           'Content-Type': 'application/json',
+           'x-access-token': token
+          },
+          body: JSON.stringify(newComment)
         })
-        .catch((error) => {
-          console.warn("fetch error: ", error);
+        .then( resp => { resp.json()
+          .then( comment => {
+
+            this.refs.textBox.setNativeProps({text: ''});
+            this.state.comments.push(comment);
+
+            this.setState({
+              comment: '',
+              comments: this.state.comments
+            });
+
+          })
+          .catch((error) => {
+            console.warn("fetch error: ", error);
+          });
         });
       });
-    });
+
+    }
+
   }
 
   makeDataSource(data) {
