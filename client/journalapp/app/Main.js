@@ -36,6 +36,7 @@ import NetworkInfo from 'react-native-network-info';
 import helpers from './helper.js';
 import Swiper from 'react-native-swiper'
 helper = new helpers();
+
 NetworkInfo.getSSID(ssid =>{
   console.log(ssid);
 });
@@ -55,7 +56,8 @@ export default class Main extends Component {
       newEntry: '',
       friendName: '',
       location: '',
-      slideView: ['EntriesTab', 'FeedTab', 'FriendsTab', 'SettingsTab']
+      slideView: ['EntriesTab', 'FeedTab', 'FriendsTab', 'SettingsTab'],
+      load: false
     };
   }
 
@@ -199,9 +201,7 @@ export default class Main extends Component {
   //TODO: CBELLE
   deleteEntries(username, secret, msgId) {
     var userEntries = this.state.entries.getRowData(0,0);
-
-    var queryUrl = msgId ? ('?messageId=' + msgId) : '';
-
+    console.log('delete entries invoked');
     var toBeDeleted = {
       userId: userEntries.userId
     }
@@ -209,22 +209,38 @@ export default class Main extends Component {
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url = store[1][1];
+      var queryUrl = '';
+
+      if (msgId) {
+        queryUrl = '?messageId=' + msgId;
+      } 
       
-      fetch(`${ url }api/entries${ queryUrl }`, {
-        method: 'DELETE',
-        headers: {
-         'Content-Type': 'application/json',
-         'x-access-token': token
-        },
-        body: JSON.stringify(toBeDeleted)
-      })
-        .then((response) => {
-          console.log('Delete all entries of user');
-          response.json();
-        })
-        .catch((error) => {
-          console.warn("fetch error:", error);   
-        });
+      if (secret || msgId) {
+        if (secret.toUpperCase() === 'RESET' || msgId) {
+
+          //set load to true
+          this.setState({load: true});
+          fetch(`${ url }api/entries${ queryUrl }`, {
+            method: 'DELETE',
+            headers: {
+             'Content-Type': 'application/json',
+             'x-access-token': token
+            },
+            body: JSON.stringify(toBeDeleted)
+          })
+            .then((response) => {
+              //load to false
+              this.setState({load: false});
+              console.log('Delete all entries of user ' + username);
+              response.json();
+            })
+            .catch((error) => {
+              // load to false
+              this.setState({load: false});
+              console.warn("fetch error:", error);   
+          });
+        }
+      }
     });
   }
 
@@ -250,6 +266,7 @@ export default class Main extends Component {
   // According to the state's current page, return a certain tab view. Tab views are all stateful, and will
   // potentially contain logic to interact with the server, or navigate to scenes using the Navigator. This
   // is essentially the tab's router.
+
   // renderTab(navigator) {
   //   if (this.state.page === "EntriesTab") return <EntriesTab
   //                                                   navigator={navigator}
@@ -334,6 +351,7 @@ export default class Main extends Component {
                navigator={navigator}
                getEntries={ this.getEntries.bind(this) }
                entries={ this.state.entries }
+               deleteEntries={ this.deleteEntries.bind(this) }
                filterTags= { _.debounce(this.filterTags.bind(this), 500) }/>
            </View>
            <View style={styles.slide2}>

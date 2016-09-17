@@ -21,7 +21,7 @@ var findUsername = (id, users) => {
   }
 };
 
-var EntryList = ({entries, users, navigator}) => (
+var EntryList = ({entries, users, navigator, deleteEntries}) => (
     <SwipeListView style ={styles.container}
       dataSource={entries}
       enableEmptySections={true}
