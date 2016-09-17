@@ -5,7 +5,8 @@ import {
   TextInput,
   ListView,
   View,
-  DeviceEventEmitter
+  DeviceEventEmitter,
+  TouchableHighlight
 } from 'react-native';
 import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view';
 
@@ -26,8 +27,6 @@ var EntryList = ({entries, users, navigator, deleteEntries}) => (
       dataSource={entries}
       enableEmptySections={true}
         renderRow={ (rowData, sectionID, rowID) => {
-          //console.log('Row Data: ', rowData);
-          //key is just not working... i give up
           return (<Entry
             enableEmptySections={true}
             key={rowID}
@@ -44,25 +43,20 @@ var EntryList = ({entries, users, navigator, deleteEntries}) => (
         }
       }
         renderHiddenRow={ (rowData, sectionID, rowID) => (
-          <View style={styles.rowBack}>
+          <SwipeRow
+            closeOnRowPress={true}
+          >
+          <View></View>
+          <View>
             <Button onPress= { () => 
               deleteEntries(findUsername(rowData.userId, users), 'RESET', rowData.id) }
-              containerStyle={{padding: 25, paddingTop: 30,
-                borderWidth: 0, 
-                height: 90, width: 100, 
-                overflow: 'hidden',
-                alignSelf: 'flex-start', 
-                backgroundColor: 'red'}} 
-              style={ {
-                fontSize: 15,
-                fontWeight: 'normal',
-                color: 'white'
-              } }>Delete
+              containerStyle={ styles.hiddenRowContainer } 
+              ><Text style={ styles.hiddenRow }>Delete</Text>
             </Button>
           </View>
+          </SwipeRow>
         ) }
         leftOpenValue={110}
-
     />//end swipe listview
 );
 
