@@ -49,6 +49,7 @@ export default class SignupTab extends Component {
         body: newUser
       })
       .then( resp => { 
+        console.log(resp);
         resp.json()
         .then( json => {
             if (json.token) {

@@ -223,7 +223,6 @@ export default class Main extends Component {
         body: JSON.stringify(newEntry)
       })
         .then((response) => {
-          console.log(response);
           this.getEntries();
           navigator.pop();
         })
@@ -288,7 +287,6 @@ export default class Main extends Component {
   }
 
   sendData(option) {
-    console.log(this.state.sendData);
     if (option === 'CALL') {
       helper.callArray(this.state.sendData.json);
     } else if (option === 'TEXT') {
