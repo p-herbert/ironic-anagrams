@@ -45,6 +45,12 @@ export default class EntriesTab extends Component {
             <Text style={ styles.buttonText }>What did you do today?</Text>
             <Image style={ styles.tabbarimage } source={require('./../images/Pen_Icon.png')}/>
           </Button>
+          <TextInput
+              keyboardType='default'
+              keyboardAppearance='light'
+              placeholder= 'Search tags'
+              style={ {height: 50} }
+              onChangeText={ (text) => this.props.filter(text) }/>
         </View>
         <EntryList entries={ this.props.entries } navigator={ this.props.navigator }/>
       </View>
