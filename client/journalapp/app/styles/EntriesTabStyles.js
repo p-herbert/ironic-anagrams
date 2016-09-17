@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginTop: 70,
     height: Dimensions.get('window').height - 70,
-    width: Dimensions.get('window').width * .93,
+    width: Dimensions.get('window').width + 10,
     paddingLeft:6,
     paddingRight:6,
   },
