@@ -53,6 +53,7 @@ export default class Main extends Component {
     this.state = {
       page: 'EntriesTab',
       entries: ds.cloneWithRows([]),
+      allEntries: [],
       newEntry: '',
       friendName: '',
       location: '',
@@ -76,6 +77,19 @@ export default class Main extends Component {
     this.setState({
       friendName: name
     });
+  }
+
+  processDelete(msgId) {
+
+    var curState = this.state.entries.slice();
+
+    var result = curState.filter(function(entry) {
+      return entry.id !== msgId;
+    });
+
+    this.setState({
+      allEntries: result
+    })
   }
 
   // Use this to keep track of the user's last location.
@@ -138,7 +152,8 @@ export default class Main extends Component {
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
-            entries: ds.cloneWithRows(json) //cloneWithRows updates data in DataSource
+            entries: ds.cloneWithRows(json), //cloneWithRows updates data in DataSource
+            allEntries: json
           });
         })
         .catch((error) => {
@@ -215,8 +230,7 @@ export default class Main extends Component {
         queryUrl = '?messageId=' + msgId;
       } 
       
-      if (secret || msgId) {
-        if (secret.toUpperCase() === 'RESET' || msgId) {
+      if (secret && secret.toUpperCase() === 'RESET') {
 
           //set load to true
           this.setState({load: true});
@@ -230,8 +244,13 @@ export default class Main extends Component {
           })
             .then((response) => {
               //load to false
-              this.setState({load: false});
+              const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+              this.processDelete(msgId);
+
+              this.setState({load: false, entries: this.state.allEntries});
               console.log('Delete all entries of user ' + username);
+
               response.json();
             })
             .catch((error) => {
@@ -239,7 +258,6 @@ export default class Main extends Component {
               this.setState({load: false});
               console.warn("fetch error:", error);   
           });
-        }
       }
     });
   }
