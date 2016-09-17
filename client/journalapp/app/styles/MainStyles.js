@@ -15,7 +15,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,.3)'
+    backgroundColor: 'rgba(0,0,0,.3)',
+    padding: 20
+  },
+  prompt: {
+    width: 200,
+    height: 200,
+    borderColor: 'gray',
+    borderWidth:.5,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)'
   },
   textinput: {
     height: 40,

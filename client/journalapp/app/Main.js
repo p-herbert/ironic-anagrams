@@ -62,7 +62,7 @@ export default class Main extends Component {
       slideView: ['EntriesTab', 'FeedTab', 'FriendsTab', 'SettingsTab'],
       load: false,
       atModalVis: false,
-      data: {}
+      sendData: {}
     };
   }
 
@@ -97,10 +97,10 @@ export default class Main extends Component {
     })
   }
 
-  setModalVisible(bool, dataToDisplay){
+  setModalVisible(bool, data){
     this.setState({atModalVis: bool});
-    if (dataToDisplay) {
-      this.setState({data: dataToDisplay});
+    if (data) {
+      this.setState({sendData: data});
     }
   }
   // Use this to keep track of the user's last location.
@@ -139,7 +139,9 @@ export default class Main extends Component {
     navigator.geolocation.clearWatch(this.watchID);
     NetInfo.removeEventListener('change', helper.netListener);
   }
-
+  setNativeProps (nativeProps) {
+    this._root.setNativeProps(nativeProps);
+  }
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for
   // either the signed in user, when he/she is at his/her profile, or all the entries for a selected friend,
   // if the user has navigated over to that friend's profile. Note that it will be called on the entry tab's
@@ -231,7 +233,7 @@ export default class Main extends Component {
     });
   }
 
-  //TODO: CBELLE
+
 
   deleteEntries(username, secret, msgId) {
     var userEntries = this.state.entries.getRowData(0,0);
@@ -285,6 +287,17 @@ export default class Main extends Component {
     });
   }
 
+  sendData(option) {
+    console.log(this.state.sendData);
+    if (option === 'CALL') {
+      helper.callArray(this.state.sendData.json);
+    } else if (option === 'TEXT') {
+      helper.textArray(this.state.sendData.json, this.state.sendData.input)
+    } else if (option === 'EMAIL') {
+      helper.emailArray 
+    }
+    this.setModalVisible(false, {});
+  }
 
   filterTags(str) {
 
@@ -338,9 +351,6 @@ export default class Main extends Component {
   // Navigator is altered (via push, pop, etc), will check to see the title of the current route (note that
   // a Navigator is a stack of scenes, so the current route will be the last route in the stack), and will then
   // return the appropriate Component(s).
-
-  //KEEPING THIS STUFF JUST IN CASE, FOR NOW
-
   //this was right below the inital View
   //{this.renderTab(navigator)}
           /*<Tabs
@@ -357,36 +367,6 @@ export default class Main extends Component {
               <Text
                 style={styles.tabbartext}>
                 Entries</Text>
-              <Modal
-                animationType={'fade'}
-                transparent={true}
-                visible={this.state.atModalVis}
-                onRequestClose={() => {this.setModalVisible(false)}}
-                >
-                <View style={styles.transContainer}>
-                  <Slider
-                  maximumValue ={100}
-                  step = {1}
-                  maximumTrackTintColor={'#ffffff'}
-                  minimumTrackTintColor={'#000000'}
-                  onSlidingComplete={val => console.log(val)}/>
-                  <TouchableHighlight onPress = {()=> this.setModalVisible(false)}>
-                    <Icon.Button name="facebook" backgroundColor="#3b5998">
-                      <Text style={{fontFamily: 'Arial', fontSize: 15}}>Text</Text>
-                    </Icon.Button>
-                  </TouchableHighlight>
-                  <TouchableHighlight>
-                    <Icon.Button name="facebook" backgroundColor="#3b5998">
-                      <Text style={{fontFamily: 'Arial', fontSize: 15}}>Call</Text>
-                    </Icon.Button>
-                  </TouchableHighlight>
-                  <TouchableHighlight>
-                    <Icon.Button name="facebook" backgroundColor="#3b5998">
-                      <Text style={{fontFamily: 'Arial', fontSize: 15}}>Email</Text>
-                    </Icon.Button>
-                  </TouchableHighlight>
-                </View>
-              </Modal>
             </View>
 
             <View name="FeedTab" style={styles.tabbarView}>
@@ -440,7 +420,23 @@ export default class Main extends Component {
                 signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>
            </View>
          </Swiper>
+        <Modal
+            animationType={'fade'}
+            transparent={true}
+            visible={this.state.atModalVis}
+            onRequestClose={() => {this.setModalVisible(false)}}
+            >
+            <View style={styles.transContainer}>
+              <View style= {styles.prompt}>
+            
+              <TouchableHighlight onPress={()=> this.sendData('EMAIL')}>
+              <Text> TEST </Text>
+              </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
         </View>
+          
       )
     } else if (route.title === 'FriendPage') {
       return (

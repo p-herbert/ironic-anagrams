@@ -14,9 +14,9 @@ export default class Journalapp extends Component {
     //for running on deployment branch uncomment this one and comment out the other one: 
     //'https://journaldb.herokuapp.com/'
     //'http://localhost:3000/'
-    AsyncStorage.setItem('@MySuperStore:url', 'https://journaldb.herokuapp.com/', (err) => ( err ? console.warn(err) : null ) );
+    AsyncStorage.setItem('@MySuperStore:url', 'http://localhost:3000/', (err) => ( err ? console.warn(err) : null ) );
     this.state = {
-      url: 'https://journaldb.herokuapp.com/',
+      url: 'http://localhost:3000/',
       loggedIn: false
     };
   }

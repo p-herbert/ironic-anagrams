@@ -23,7 +23,7 @@ var emailArray = (userArray, input) => {
   userArray.forEach(function(user){
     allEmails.push(user.username);
   });
-  Communications.email(allEmails, null, null, null, input);
+  Communications.email(null, null, allEmails, null, input);
 };
 
 var textArray = (userArray, input) => {
@@ -188,7 +188,9 @@ export default class helpers {
       inputs.push(input);
       input = '';
     }
-    return {tags: tags, ats: ats, inputs: inputs};
+    retval = {tags: tags, ats: ats, inputs: inputs};
+    console.log(retval);
+    return retval;
 }
 
 parsePhoneNumber(phoneNum){
@@ -218,6 +220,7 @@ parsePhoneNumber(phoneNum){
   };
 
   atNetwork(input) {
+    console.log(input);
     var context = this;
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
     var token = store[0][1];
@@ -232,8 +235,8 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
+          console.log(json);
           context.showModal(true, {json: json, input: input});
-          // showSpecialAt(json, input);
         })
         .catch((error) => {
           console.warn("fetch error on getrequest:", error);
@@ -245,6 +248,7 @@ parsePhoneNumber(phoneNum){
 
 
   atFriends(input) {
+    var context = this;
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url = store[1][1];
@@ -257,7 +261,7 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          showSpecialAt(json, input);
+          context.showModal(true, {json: json, input: input});
         })
         .catch((error) => {
           console.warn("error on json():", error);
@@ -271,6 +275,7 @@ parsePhoneNumber(phoneNum){
 
   parseSpecial(specialAt) {
     if (specialAt === '@network') {
+      console.log('@network detected');
       return this.atNetwork;
     } else if (specialAt = '@friends') {
       return this.atFriends;
