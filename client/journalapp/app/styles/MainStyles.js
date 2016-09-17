@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   topBar: {
     width: Dimensions.get('window').width,
     height: 60,
-    backgroundColor: '#f5f6f6',
+    backgroundColor: '#48b9c7',
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(175,175,175,.6)',
   },
@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     height: 53,
     fontSize: 17,
-    fontWeight: '600'
+    fontWeight: '600',
+    color: '#fdf6e3'
   },
   titleCounter: {
     marginTop: 9,
@@ -85,6 +86,38 @@ const styles = StyleSheet.create({
     marginRight: 10,
     height: 53,
     //fontSize: 14,
+  },
+  //Swiper
+  wrapper: {
+  },
+  slide1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: '#9DD6EB',
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: '#97CAE5',
+  },
+  slide3: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: '#92BBD9',
+  },
+  slide4: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    //backgroundColor: '#92BBD9',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
   }
 });
 

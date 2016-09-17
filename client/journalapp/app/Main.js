@@ -29,10 +29,12 @@ import FeedTab from './Friend_Components/FeedTab';
 import GeoCoder from 'react-native-geocoder';
 GeoCoder.fallbackToGoogle('AIzaSyDQeWhbhQK8oS2sJwwobh1LIBdcnSfw0Go');
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Communications from 'react-native-communications';
 import styles from './styles/MainStyles';
 import NetworkInfo from 'react-native-network-info';
 import helpers from './helper.js';
+import Swiper from 'react-native-swiper'
 helper = new helpers();
 NetworkInfo.getSSID(ssid =>{
   console.log(ssid);
@@ -50,7 +52,8 @@ export default class Main extends Component {
       entries: ds.cloneWithRows([]),
       newEntry: '',
       friendName: '',
-      location: ''
+      location: '',
+      slideView: ['EntriesTab', 'FeedTab', 'FriendsTab', 'SettingsTab']
     };
   }
 
@@ -118,6 +121,7 @@ export default class Main extends Component {
       //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       var token = store[0][1];
       var url = store[1][1];
+      console.log(token);
       fetch(`${ url }api/entries?tags=${tabs}`, {
         method: 'GET',
         headers: {
@@ -238,38 +242,48 @@ export default class Main extends Component {
     console.log('Fetching new posts based on tag filtering');
   }
 
+  ////////////////////////////////////////////////////////////////////////////////////////
+  //THIS IS NOT USED ANYMORE, SEE SWIPER FOR HOW MAIN SCENE NAVIGATION WORKS
+  //
   // According to the state's current page, return a certain tab view. Tab views are all stateful, and will
   // potentially contain logic to interact with the server, or navigate to scenes using the Navigator. This
   // is essentially the tab's router.
-  renderTab(navigator) {
-    if (this.state.page === "EntriesTab") return <EntriesTab
-                                                    navigator={navigator}
-                                                    getEntries={ this.getEntries.bind(this) }
-                                                    entries={ this.state.entries }/>;
-    if (this.state.page === "FriendsTab") return <FriendsTab
-                                                    navigator={navigator}
-                                                    updateFriend={ this.updateFriend.bind(this) }/>;
-    if (this.state.page === "SettingsTab") return <SettingsTab
-                                                    signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>;
-    if (this.state.page === "FeedTab") return <FeedTab
-                                                    navigator={ navigator }
-                                                    filterTags= {this.filterTags.bind(this) }/>; //this method Julian has written
+  // renderTab(navigator) {
+  //   if (this.state.page === "EntriesTab") return <EntriesTab
+  //                                                   navigator={navigator}
+  //                                                   getEntries={ this.getEntries.bind(this) }
+  //                                                   entries={ this.state.entries }/>;
+  //   if (this.state.page === "FriendsTab") return <FriendsTab
+  //                                                   navigator={navigator}
+  //                                                   updateFriend={ this.updateFriend.bind(this) }/>;
+  //   if (this.state.page === "SettingsTab") return <SettingsTab
+  //                                                   signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>;
+  //   if (this.state.page === "FeedTab") return ( <Swiper style={styles.wrapper} showsButtons={true}>
+  //                                                 <View style={styles.slide1}>
+  //                                                   <Text style={styles.text}>Hello Swiper</Text>
+  //                                                 </View>
+  //                                                 <View style={styles.slide2}>
+  //                                                   <FeedTab
+  //                                                   navigator={ navigator }
+  //                                                   filterTags= {this.filterTags.bind(this) }/>
+  //                                                 </View>
+  //                                                 <View style={styles.slide3}>
+  //                                                   <Text style={styles.text}>And simple</Text>
+  //                                                 </View>
+  //                                               </Swiper>);
 
-  }
+  // }
 
   // This logic applies routing according the title of the current route. It will be activated whenever the
   // Navigator is altered (via push, pop, etc), will check to see the title of the current route (note that
   // a Navigator is a stack of scenes, so the current route will be the last route in the stack), and will then
   // return the appropriate Component(s).
-  navigatorRenderScene(route, navigator) {
-    const { page } = this.state;
-    if (route.title === 'Main') {
-      return (
-        <View style={styles.container}>
 
-          {this.renderTab(navigator)}
+  //KEEPING THIS STUFF JUST IN CASE, FOR NOW
 
-          <Tabs
+  //this was right below the inital View
+  //{this.renderTab(navigator)}
+          /*<Tabs
             selected={page}
             style={styles.tabbar}
             selectedStyle={{ opacity: 1 }} onSelect={el=>this.setState({page:el.props.name})}>
@@ -302,7 +316,38 @@ export default class Main extends Component {
               <Text style={styles.tabbartext}>Settings</Text>
             </View>
 
-          </Tabs>
+          </Tabs>*/
+  navigatorRenderScene(route, navigator) {
+    const { page } = this.state;
+    if (route.title === 'Main') {
+      return (
+        <View style={styles.container}>
+
+          <Swiper style={styles.wrapper} 
+                  showsButtons={true}
+                  loop={false}
+                  onMomentumScrollEnd={(e, state, context)=> {this.setState({page: this.state.slideView[state.index]});}}>
+           <View style={styles.slide1}>
+             <EntriesTab
+               navigator={navigator}
+               getEntries={ this.getEntries.bind(this) }
+               entries={ this.state.entries }/>
+           </View>
+           <View style={styles.slide2}>
+             <FeedTab
+             navigator={ navigator }
+             filterTags= {this.filterTags.bind(this) }/>
+           </View>
+           <View style={styles.slide3}>
+            <FriendsTab
+             navigator={navigator}
+             updateFriend={ this.updateFriend.bind(this) }/>
+           </View>
+           <View style={styles.slide4}>
+             <SettingsTab
+                signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>
+           </View>
+         </Swiper>
         </View>
       )
     } else if (route.title === 'FriendPage') {
@@ -382,7 +427,7 @@ export default class Main extends Component {
                   return (
                     <View style={ [styles.topBarView, styles.rightArrow] }>
                       <Text onPress={()=>{ navigator.push({title: 'SearchFriends'}) }} >
-                        <Image style={styles.image} source={require('./images/Add_Friend.png')}/>
+                        <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'plus-square'}/>
                       </Text>
                     </View>
                   )
@@ -405,10 +450,10 @@ export default class Main extends Component {
                 } else if (route.title === 'CommentsScene') {
                   return (<Text style={ styles.title }>{ 'Comments' }</Text>);
                 } else if ( this.state.page === 'EntriesTab' ) {
-                  return (<Text style={ styles.title }>{ 'My Story' }</Text>);
+                  return (<Text style={ styles.title }><AwesomeIcon color={'#fdf6e3'} name='rocket' size={24} style={styles.rocket}/>{ '  Broadcast' }</Text>);
                 }
 
-                // Title views for the friends routes.
+                //Title views for the friends routes.
                 if ( route.title === 'SearchFriends') {
                   return (<Text style={ styles.title }>{ 'Add Friends' }</Text>);
                 } else if ( route.title === 'FriendPage' ) {
