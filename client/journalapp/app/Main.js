@@ -448,26 +448,26 @@ export default class Main extends Component {
                 if ( route.title === 'MessageScene') {
                   return (<Text style = { [styles.faintText, styles.titleCounter] }>{ 100 - this.state.newEntry.length }</Text>)
                 } else if (route.title === 'CommentsScene') {
-                  return (<Text style={ styles.title }>{ 'Comments' }</Text>);
+                  return (<Text style={ styles.title }>{ 'comments' }</Text>);
                 } else if ( this.state.page === 'EntriesTab' ) {
-                  return (<Text style={ styles.title }><AwesomeIcon color={'#fdf6e3'} name='rocket' size={24} style={styles.rocket}/>{ '  Broadcast' }</Text>);
+                  return (<Text style={ styles.title }><AwesomeIcon color={'#fdf6e3'} name='rocket' size={24} style={styles.rocket}/>{ '  caster' }</Text>);
                 }
 
                 //Title views for the friends routes.
                 if ( route.title === 'SearchFriends') {
-                  return (<Text style={ styles.title }>{ 'Add Friends' }</Text>);
+                  return (<Text style={ styles.title }>{ 'add friends' }</Text>);
                 } else if ( route.title === 'FriendPage' ) {
                   return (<Text style={ styles.title }>{ this.state.friendName } </Text>);
                 } else if ( this.state.page === 'FriendsTab' ) {
-                  return (<Text style={ styles.title }>{ 'Friends' }</Text>);
+                  return (<Text style={ styles.title }>{ 'friends' }</Text>);
                 }
 
                 // Title views for the settings route.
                 if (this.state.page === 'SettingsTab') {
-                  return (<Text style={ styles.title }>{ 'Settings' }</Text>);
+                  return (<Text style={ styles.title }>{ 'settings' }</Text>);
                 }
                 if (this.state.page === 'FeedTab') {
-                  return (<Text style={ styles.title }>{ 'Your Friend Feed' }</Text>);
+                  return (<Text style={ styles.title }>{ 'your friend feed' }</Text>);
                 }
 
                 else {

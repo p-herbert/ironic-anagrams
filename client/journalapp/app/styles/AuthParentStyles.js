@@ -8,10 +8,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#f5f6f6',
+    backgroundColor:'#fdf6e3',
   },
   tabbar: {
-    backgroundColor:'#f5f6f6',
+    backgroundColor:'#fdf6e3',
     height: 54,
     borderTopColor: '#878787',
     borderTopWidth: 1,
