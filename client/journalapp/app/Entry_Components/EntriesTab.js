@@ -29,7 +29,9 @@ export default class EntriesTab extends Component {
 
   componentDidMount() {
     this.props.getEntries();
+    //swipeout enabled
   }
+  //delete button gets prop of msgId
 
   render() {
 
@@ -52,7 +54,7 @@ export default class EntriesTab extends Component {
             <Image style={ styles.tabbarimage } source={require('./../images/Pen_Icon.png')}/>
           </Button>
         </View>
-        <EntryList entries={ this.props.entries } navigator={ this.props.navigator }/>
+        <EntryList deleteEntries={ this.props.deleteEntries } entries={ this.props.entries } navigator={ this.props.navigator }/>
       </View>
 
      );

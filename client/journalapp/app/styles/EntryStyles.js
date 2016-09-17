@@ -8,7 +8,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#cccccc',
     paddingTop: 12,
-    paddingBottom: 12
+    paddingBottom: 12,
+    backgroundColor: '#f6f6f6'
   },
   row: {
     flex: 1,
@@ -26,6 +27,9 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     justifyContent: 'flex-end',
     flexDirection: 'row'
+  },
+  rowBack: {
+    backgroundColor: 'white'
   },
   filler: {
   },
