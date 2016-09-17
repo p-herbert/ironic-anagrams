@@ -50,7 +50,7 @@ export default class EntriesTab extends Component {
               keyboardAppearance='light'
               placeholder= 'Search tags'
               style={ {height: 50} }
-              onChangeText={ (text) => this.props.filter(text) }/>
+              onChangeText={ (text) => this.props.filterTags(text) }/>
         </View>
         <EntryList entries={ this.props.entries } navigator={ this.props.navigator }/>
       </View>

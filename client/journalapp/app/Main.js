@@ -245,7 +245,8 @@ export default class Main extends Component {
     if (this.state.page === "EntriesTab") return <EntriesTab
                                                     navigator={navigator}
                                                     getEntries={ this.getEntries.bind(this) }
-                                                    entries={ this.state.entries }/>;
+                                                    entries={ this.state.entries }
+                                                    filterTags={ this.filterTags.bind(this) }/>;
     if (this.state.page === "FriendsTab") return <FriendsTab
                                                     navigator={navigator}
                                                     updateFriend={ this.updateFriend.bind(this) }/>;
