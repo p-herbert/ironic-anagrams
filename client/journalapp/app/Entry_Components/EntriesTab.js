@@ -48,7 +48,7 @@ export default class EntriesTab extends Component {
           <Text style={ styles.date }>{ DateFormatter(new Date(), 'ddd, mmm d') }</Text>
           <Button style={ styles.headerButton } 
                   onPress={ () => this.props.navigator.push({ title: 'MessageScene'}) }>
-            <Text style={ styles.buttonText }>What did you do today?</Text>
+            <Text style={ styles.buttonText }>What do you want to broadcast?</Text>
             <Image style={ styles.tabbarimage } source={require('./../images/Pen_Icon.png')}/>
           </Button>
         </View>
