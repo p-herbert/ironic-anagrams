@@ -39,7 +39,6 @@ export default class SignupTab extends Component {
       password: this.state.password,
       phoneNumber: this.state.phonenumber
     });
-    console.log(newUser);
     if (this.formStatus()) {
 
       fetch(`${this.props.url}api/signup`, {
@@ -52,10 +51,9 @@ export default class SignupTab extends Component {
       .then( resp => { 
         resp.json()
         .then( json => {
-          console.log(json, '!');
             if (json.token) {
               try {
-                AsyncStorage.multiSet([['@MySuperStore:token', json.token], ['@MySuperStore:username', this.state.username]], (err) => {
+                AsyncStorage.multiSet([['@MySuperStore:token', json.token], ['@MySuperStore:username', this.state.username], ['@MySuperStore:respect', '100']], (err) => {
                   if ( err ) { console.warn(err); }
                   this.props.updateStatus(true);
                 });

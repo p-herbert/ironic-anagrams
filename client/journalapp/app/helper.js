@@ -67,40 +67,49 @@ var showSpecialAt = (json, input) => {
 };
 
 export default class helpers {
-  netListener(reach) {
+  constructor() {
+    this.showModal = 'test';
+  }
+  passDisplay(modalDisplay){
+    this.showModal = modalDisplay;
+  }
+  netListener(reach){
     var SSID = {ssid: 'UNKNOWN'};
+    var ip = {ip: 'UNKNOWN'};
     if (NetworkInfo) {
       NetworkInfo.getSSID(ssid => {
-        if (ssid !== 'error') {
-          SSID = {ssid: ssid};
-          if (SSID.ssid !== 'UNKNOWN' || SSID.ssid !== 'error') {
-            AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
-              //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-              var token = store[0][1];
-              var url = store[1][1];
-              fetch(`${ url }api/users`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'x-access-token': token
-                },
-                body: JSON.stringify(SSID)
-              })
-              .then( resp => { 
-                if (resp.status === 204) {
-                  AsyncStorage.setItem('@MySuperStore:ssid', SSID.ssid, function(err) {
-                    if (err) {
-                      console.warn(err);
-                    }
-                  });
-                }
+        NetworkInfo.getIPAddress(ip => {
+          if (ssid !== 'error') {
+            if (ssid !== 'UNKNOWN' || ssid !== 'error') {
+              AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+                //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+                var token = store[0][1];
+                var url = store[1][1];
+                fetch(`${ url }api/users`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': token
+                  },
+                  body: JSON.stringify({ip: ip, ssid: ssid})
+                })
+                .then( resp => { 
+                  if (resp.status === 204) {
+                    AsyncStorage.setItem('@MySuperStore:ssid', SSID.ssid, function(err){
+                      if(err) {
+                        console.warn(err);
+                      }
+                    });
+                  }
+                });
               });
-            });
-          }
-        }
+            };
+          };
+        });
       });
-    }
-  }
+    };
+  };
+
 
 
   parseText(text){
@@ -209,6 +218,7 @@ parsePhoneNumber(phoneNum){
   };
 
   atNetwork(input) {
+    var context = this;
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
     var token = store[0][1];
     var url = store[1][1];
@@ -222,7 +232,8 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          showSpecialAt(json, input);
+          context.showModal(true, {json: json, input: input});
+          // showSpecialAt(json, input);
         })
         .catch((error) => {
           console.warn("fetch error on getrequest:", error);

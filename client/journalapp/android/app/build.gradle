@@ -126,6 +126,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-bluetooth-serial')
     compile project(':react-native-network-info')
     compile project(':react-native-sensor-manager')
     compile project(':react-native-vector-icons')

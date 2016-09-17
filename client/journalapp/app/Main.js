@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
+  Slider,
+  Modal,
   Text,
   Alert,
   TextInput,
@@ -58,7 +60,9 @@ export default class Main extends Component {
       friendName: '',
       location: '',
       slideView: ['EntriesTab', 'FeedTab', 'FriendsTab', 'SettingsTab'],
-      load: false
+      load: false,
+      atModalVis: false,
+      data: {}
     };
   }
 
@@ -79,6 +83,7 @@ export default class Main extends Component {
     });
   }
 
+
   processDelete(msgId) {
 
     var curState = this.state.allEntries.slice();
@@ -92,6 +97,12 @@ export default class Main extends Component {
     })
   }
 
+  setModalVisible(bool, dataToDisplay){
+    this.setState({atModalVis: bool});
+    if (dataToDisplay) {
+      this.setState({data: dataToDisplay});
+    }
+  }
   // Use this to keep track of the user's last location.
   watchID: ?number = null;
 
@@ -100,6 +111,7 @@ export default class Main extends Component {
   // NOTE: React Native unfortunately uses navigator as a variable in their geolocation. This does not refer to
   // the Navigator component, nor an instance of it.
   componentDidMount() {
+    helper.passDisplay(this.setModalVisible.bind(this));
     NetInfo.addEventListener('change', helper.netListener);
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -132,23 +144,23 @@ export default class Main extends Component {
   // either the signed in user, when he/she is at his/her profile, or all the entries for a selected friend,
   // if the user has navigated over to that friend's profile. Note that it will be called on the entry tab's
   // mount and also after the user makes a new entry (so it'll autorefresh the entry list).
-  getEntries(tabs){
-    //tabs is an array of strings like ['#hash', '#test']
-    tabs = JSON.stringify(tabs) || '[]';
+  getEntries(tags){
+    //tags is an array of strings like ['#hash', '#test']
+    tags = JSON.stringify(tags) || '[]';
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       var token = store[0][1];
       var url = store[1][1];
-      console.log(token);
-      fetch(`${ url }api/entries?tags=${tabs}`, {
+      fetch(`${ url }api/entries?tags=${tags}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        },
-        query: JSON.stringify(tabs)
+        }
       })
-      .then( resp => { resp.json()
+      .then( resp => { 
+        console.log(resp);
+        resp.json()
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
@@ -157,7 +169,7 @@ export default class Main extends Component {
           });
         })
         .catch((error) => {
-          console.warn("fetch error on get request:", error);
+          console.warn("fetch error on get request:", error, resp);
         });
       });
     });
@@ -167,7 +179,7 @@ export default class Main extends Component {
   // publish onPress method.
   postEntry(navigator){
     var text = this.state.newEntry;
-    var data = helper.parseText(text);
+    var data = helper.parseText(text.toLowerCase());
     data.ats.forEach(function(at, index, ats) {
       var phoneNum = helper.parsePhoneNumber(at);
       if (phoneNum) {
@@ -183,7 +195,7 @@ export default class Main extends Component {
           if (web) {
             Communications.web(web[0]);
           } else {
-            var specialAt = helper.parseSpecial(at);
+            var specialAt = helper.parseSpecial(at).bind(helper);
             if (specialAt) {
               specialAt(data.inputs);
             } else {
@@ -220,15 +232,8 @@ export default class Main extends Component {
   }
 
   //TODO: CBELLE
-<<<<<<< a790f4e3b084698bf5bc87035420a5f351a5b659
+
   deleteEntries(username, secret, msgId) {
-=======
-  //client sends over in delete req
-
-
-
-  deleteEntries(username, secret) {
->>>>>>> Created a call for multiple people
     var userEntries = this.state.entries.getRowData(0,0);
     console.log('delete entries invoked');
     var toBeDeleted = {
@@ -352,6 +357,36 @@ export default class Main extends Component {
               <Text
                 style={styles.tabbartext}>
                 Entries</Text>
+              <Modal
+                animationType={'fade'}
+                transparent={true}
+                visible={this.state.atModalVis}
+                onRequestClose={() => {this.setModalVisible(false)}}
+                >
+                <View style={styles.transContainer}>
+                  <Slider
+                  maximumValue ={100}
+                  step = {1}
+                  maximumTrackTintColor={'#ffffff'}
+                  minimumTrackTintColor={'#000000'}
+                  onSlidingComplete={val => console.log(val)}/>
+                  <TouchableHighlight onPress = {()=> this.setModalVisible(false)}>
+                    <Icon.Button name="facebook" backgroundColor="#3b5998">
+                      <Text style={{fontFamily: 'Arial', fontSize: 15}}>Text</Text>
+                    </Icon.Button>
+                  </TouchableHighlight>
+                  <TouchableHighlight>
+                    <Icon.Button name="facebook" backgroundColor="#3b5998">
+                      <Text style={{fontFamily: 'Arial', fontSize: 15}}>Call</Text>
+                    </Icon.Button>
+                  </TouchableHighlight>
+                  <TouchableHighlight>
+                    <Icon.Button name="facebook" backgroundColor="#3b5998">
+                      <Text style={{fontFamily: 'Arial', fontSize: 15}}>Email</Text>
+                    </Icon.Button>
+                  </TouchableHighlight>
+                </View>
+              </Modal>
             </View>
 
             <View name="FeedTab" style={styles.tabbarView}>
@@ -415,11 +450,13 @@ export default class Main extends Component {
       )
     } else if (route.title === 'MessageScene') {
       return (
+        //NEED TO PASS MESSAGE SCENE THE WAY TO CHANGE MODEL VIS STATE
         <MessageScene
           navigator={navigator}
           getEntries={ this.getEntries.bind(this) }
           updateEntry = { this.updateEntry.bind(this) }
-          location={ this.state.location }/>
+          location={ this.state.location }
+          updateModal = {this.setModalVisible.bind(this)}/>
       )
     } else if (route.title === 'SearchFriends') {
       return (
@@ -535,6 +572,7 @@ export default class Main extends Component {
           }
           style={ styles.topBar } />
         } />
+
     )
   }
 }
