@@ -125,7 +125,13 @@ export default class FeedTab extends Component {
            keyboardType='default'
            keyboardAppearance='light'
            placeholder= 'Search tags'
-           style={ {height: 50, borderBottomWidth: 0.5, borderColor: '#cccccc'} }
+           style={{
+             height: 50, 
+             textAlign: 'center', 
+             borderWidth: 1, 
+             borderColor: '#cccccc', 
+             marginBottom: 16, 
+             marginTop: 12}}
            onChangeText={ (text) => this.props.filterTags(text) }/>
         <ScrollView>
           <EntryList
