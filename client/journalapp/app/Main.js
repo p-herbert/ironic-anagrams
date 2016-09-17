@@ -36,7 +36,14 @@ import Communications from 'react-native-communications';
 import styles from './styles/MainStyles';
 import NetworkInfo from 'react-native-network-info';
 import helpers from './helper.js';
-import Swiper from 'react-native-swiper'
+import Swiper from 'react-native-swiper';
+import BluetoothSerial from 'react-native-bluetooth-serial'
+BluetoothSerial.list().then(function(data, err){
+  console.log(data, err);
+});
+BluetoothSerial.isEnabled().then(function(data, err){
+  console.log(data, err);
+});
 helper = new helpers();
 
 NetworkInfo.getSSID(ssid =>{
