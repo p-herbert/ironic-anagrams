@@ -45,7 +45,7 @@ export default class EntriesTab extends Component {
               keyboardType='default'
               keyboardAppearance='light'
               placeholder= 'Search tags'
-              style={ {height: 50, textAlign: 'center', borderWidth: 1, borderColor: '#cccccc', marginBottom: 16} }
+              style={ {height: 50, textAlign: 'center', borderWidth: 1, borderColor: '#cccccc', marginBottom: 16, backgroundColor: '#f9ebc3'} }
               onChangeText={ (text) => this.props.filterTags(text) }/>
           <Text style={ styles.date }>{ DateFormatter(new Date(), 'ddd, mmm d') }</Text>
           <Button style={ styles.headerButton } 

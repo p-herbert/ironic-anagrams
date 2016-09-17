@@ -20,7 +20,7 @@ var Splash = () => {
   return (
     <View style={styles.viewContainer}>
       <View style={styles.splashcontainer}>
-        <Text style={styles.title}> welcome to caster </Text>
+        <Text style={styles.title}> caster </Text>
         <Text style={styles.subtitle}> a messaging app that let's you broadcast important text messages to your @network and @friends  </Text>
       </View>
     </View>

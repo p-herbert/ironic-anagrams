@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width*.7,
     paddingTop: 6,
     paddingBottom:6,
-    marginTop:100,
+    marginTop:70,
     marginBottom: 52,
     flex: 1,
     flexDirection:'column',
@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 18,
     height: 32,
-    fontSize: 21,
+    fontSize: 26,
+    marginBottom: 20,
     fontWeight: '300',
     alignSelf:'center',
     fontFamily: 'menlo',
