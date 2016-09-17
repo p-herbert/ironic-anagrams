@@ -46,8 +46,7 @@ var EntryList = ({entries, users, navigator, deleteEntries}) => (
         renderHiddenRow={ (rowData, sectionID, rowID) => (
           <View style={styles.rowBack}>
             <Button onPress= { () => 
-              this.props
-              .deleteEntries(findUsername(rowData.userId, users), 'RESET', rowData.id) }
+              deleteEntries(findUsername(rowData.userId, users), 'RESET', rowData.id) }
               containerStyle={{padding: 25, paddingTop: 30,
                 borderWidth: 0, 
                 height: 90, width: 100, 
