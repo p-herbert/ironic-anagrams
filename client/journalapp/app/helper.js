@@ -12,46 +12,113 @@ import {
   Dimensions,
   Image,
   TouchableHighlight,
-  Linking
+  Linking,
+  ActionSheetIOS
 } from 'react-native';
 import Communications from 'react-native-communications';
 import NetworkInfo from 'react-native-network-info';
 
+var emailArray = (userArray, input) => {
+  var allEmails = [];
+  userArray.forEach(function(user){
+    allEmails.push(user.username);
+  });
+  Communications.email(null, null, allEmails, null, input);
+};
+
+var textArray = (userArray, input) => {
+  var allNums = [];
+  userArray.forEach(function(user){
+    allNums.push(user.phoneNumber);
+  });
+  var body = ''
+  if (input.length > 0) {
+    body = input[0].slice(1);
+  }
+  Linking.openURL(`sms://open?addresses=${allNums.join(',')}&body=${body}`);
+};
+
+var callArray = (userArray, input) => {
+  var allNums = [];
+  userArray.forEach(function(user){
+    allNums.push(user.phoneNumber);
+  });
+  var body = '';
+  if (input.length > 0) {
+    body = input[0].slice(1);
+  }
+  Linking.openURL(`telprompt://${allNums.join(', ')}`);
+}
+
+var showSpecialAt = (json, input) => {
+  ActionSheetIOS.showActionSheetWithOptions({
+    options:['Call', 'Text', 'Email', 'Cancel'],
+    cancelButtonIndex: 3
+  },
+  (buttonIndex) => {
+    if (buttonIndex === 0){
+      callArray(json, input);
+    } else if(buttonIndex === 1) {
+      textArray(json, input);
+    } else if(buttonIndex === 2) {
+      emailArray(json, input);
+    }
+  });
+};
+
 export default class helpers {
-  netListener(reach) {
+  constructor() {
+    this.showModal = 'test';
+  }
+  passDisplay(modalDisplay){
+    this.showModal = modalDisplay;
+  }
+  textArray(userArray, input){
+    textArray(userArray, input);
+  }
+  callArray(userArray, input){
+    callArray(userArray, input);
+  }
+  emailArray(userArray, input){
+    emailArray(userArray, input);
+  }
+  netListener(reach){
     var SSID = {ssid: 'UNKNOWN'};
+    var ip = {ip: 'UNKNOWN'};
     if (NetworkInfo) {
       NetworkInfo.getSSID(ssid => {
-        if (ssid !== 'error') {
-          SSID = {ssid: ssid};
-          if (SSID.ssid !== 'UNKNOWN' || SSID.ssid !== 'error') {
-            AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
-              //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
-              var token = store[0][1];
-              var url = store[1][1];
-              fetch(`${ url }api/users`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'x-access-token': token
-                },
-                body: JSON.stringify(SSID)
-              })
-              .then( resp => { 
-                if (resp.status === 204) {
-                  AsyncStorage.setItem('@MySuperStore:ssid', SSID.ssid, function(err) {
-                    if (err) {
-                      console.warn(err);
-                    }
-                  });
-                }
+        NetworkInfo.getIPAddress(ip => {
+          if (ssid !== 'error') {
+            if (ssid !== 'UNKNOWN' || ssid !== 'error') {
+              AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+                //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+                var token = store[0][1];
+                var url = store[1][1];
+                fetch(`${ url }api/users`, {
+                  method: 'PUT',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'x-access-token': token
+                  },
+                  body: JSON.stringify({ip: ip, ssid: ssid})
+                })
+                .then( resp => { 
+                  if (resp.status === 204) {
+                    AsyncStorage.setItem('@MySuperStore:ssid', SSID.ssid, function(err){
+                      if(err) {
+                        console.warn(err);
+                      }
+                    });
+                  }
+                });
               });
-            });
-          }
-        }
+            };
+          };
+        });
       });
-    }
-  }
+    };
+  };
+
 
 
   parseText(text){
@@ -130,23 +197,8 @@ export default class helpers {
       inputs.push(input);
       input = '';
     }
-    return {tags: tags, ats: ats, inputs: inputs};
-}
-
-emailArray(userArray) {
-  var allEmails = [];
-  userArray.forEach(function(user){
-    allEmails.push(user.username);
-  });
-  Communications.email(allEmails, null, null, null, null);
-}
-
-textArray(userArray) {
-  var allNums = [];
-  userArray.forEach(function(user){
-    allNums.push(user.phoneNumber);
-  });
-  Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
+    retval = {tags: tags, ats: ats, inputs: inputs};
+    return retval;
 }
 
 parsePhoneNumber(phoneNum){
@@ -175,34 +227,42 @@ parsePhoneNumber(phoneNum){
     return web.slice(1).match(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
   };
 
-  atNetwork() {
-    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
-    var token = store[0][1];
-    var url = store[1][1];
-    var ssid = store[2][1];
-    fetch(`${ url }api/users?ssid=${ssid}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
-      },
-      })
-      .then( resp => { resp.json()
-        .then( json => {
-          var allNums = [];
-          json.forEach(function(user){
-            allNums.push(user.phoneNumber);
+  atNetwork(input) {
+    var context = this;
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      NetworkInfo.getSSID(ssid => {
+        NetworkInfo.getIPAddress(ip => {
+          console.log(ip, ssid);
+        var token = store[0][1];
+        var url = store[1][1];
+        fetch(`${ url }api/users?ssid=${ssid}&ip=${ip}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+          },
+          })
+          .then( resp => { resp.json()
+            .then( json => {
+              if(json.length > 0){
+                context.showModal(true, {json: json, input: input});
+              } else {
+                Alert.alert('No one on the Network detected');
+              }
+            })
+            .catch((error) => {
+              console.warn("fetch error on getrequest:", error);
+            });
           });
-          Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
-        })
-        .catch((error) => {
-          console.warn("fetch error on getrequest:", error);
         });
       });
     });
-  }
+  };
 
-  atFriends() {
+
+
+  atFriends(input) {
+    var context = this;
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url = store[1][1];
@@ -215,11 +275,11 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          var allNums = [];
-          json.forEach(function(user){
-            allNums.push(user.phoneNumber);
-          });
-          Linking.openURL(`sms://open?addresses=${allNums.join(',')}`);
+          if(json.length > 0){
+            context.showModal(true, {json: json, input: input});
+          } else {
+            Alert.alert('No friends found');
+          }
         })
         .catch((error) => {
           console.warn("error on json():", error);

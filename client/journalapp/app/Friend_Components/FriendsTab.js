@@ -84,7 +84,6 @@ export default class FriendsTab extends Component {
       })
       .then( resp => { resp.json()
         .then( json => {
-          console.log(json, "myjson");
           this.setState({ pendingRequests: json });
         })
         .catch((error) => {

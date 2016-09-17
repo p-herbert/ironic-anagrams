@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 
 import {
   StyleSheet,
+  Slider,
+  Modal,
   Text,
   Alert,
   TextInput,
@@ -34,7 +36,14 @@ import Communications from 'react-native-communications';
 import styles from './styles/MainStyles';
 import NetworkInfo from 'react-native-network-info';
 import helpers from './helper.js';
-import Swiper from 'react-native-swiper'
+import Swiper from 'react-native-swiper';
+import BluetoothSerial from 'react-native-bluetooth-serial'
+BluetoothSerial.list().then(function(data){
+  console.log(data);
+});
+BluetoothSerial.isEnabled().then(function(data, err){
+  console.log(data, err);
+});
 helper = new helpers();
 
 NetworkInfo.getSSID(ssid =>{
@@ -58,7 +67,9 @@ export default class Main extends Component {
       friendName: '',
       location: '',
       slideView: ['EntriesTab', 'FeedTab', 'FriendsTab', 'SettingsTab'],
-      load: false
+      load: false,
+      atModalVis: false,
+      sendData: {}
     };
   }
 
@@ -79,6 +90,7 @@ export default class Main extends Component {
     });
   }
 
+
   processDelete(msgId) {
 
     var curState = this.state.allEntries.slice();
@@ -92,6 +104,12 @@ export default class Main extends Component {
     })
   }
 
+  setModalVisible(bool, data){
+    this.setState({atModalVis: bool});
+    if (data) {
+      this.setState({sendData: data});
+    }
+  }
   // Use this to keep track of the user's last location.
   watchID: ?number = null;
 
@@ -100,6 +118,7 @@ export default class Main extends Component {
   // NOTE: React Native unfortunately uses navigator as a variable in their geolocation. This does not refer to
   // the Navigator component, nor an instance of it.
   componentDidMount() {
+    helper.passDisplay(this.setModalVisible.bind(this));
     NetInfo.addEventListener('change', helper.netListener);
     navigator.geolocation.getCurrentPosition(
       (position) => {
@@ -127,28 +146,30 @@ export default class Main extends Component {
     navigator.geolocation.clearWatch(this.watchID);
     NetInfo.removeEventListener('change', helper.netListener);
   }
-
+  setNativeProps (nativeProps) {
+    this._root.setNativeProps(nativeProps);
+  }
   // This method is passed down to EntriesTab.js, where it is used to get the list of all entries for
   // either the signed in user, when he/she is at his/her profile, or all the entries for a selected friend,
   // if the user has navigated over to that friend's profile. Note that it will be called on the entry tab's
   // mount and also after the user makes a new entry (so it'll autorefresh the entry list).
-  getEntries(tabs){
-    //tabs is an array of strings like ['#hash', '#test']
-    tabs = JSON.stringify(tabs) || '[]';
+  getEntries(tags){
+    //tags is an array of strings like ['#hash', '#test']
+    tags = JSON.stringify(tags) || '[]';
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       //AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
       var token = store[0][1];
       var url = store[1][1];
-      console.log(token);
-      fetch(`${ url }api/entries?tags=${tabs}`, {
+      fetch(`${ url }api/entries?tags=${tags}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'x-access-token': token
-        },
-        query: JSON.stringify(tabs)
+        }
       })
-      .then( resp => { resp.json()
+      .then( resp => { 
+        console.log(resp);
+        resp.json()
         .then( json => {
           const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
           this.setState({
@@ -157,7 +178,7 @@ export default class Main extends Component {
           });
         })
         .catch((error) => {
-          console.warn("fetch error on get request:", error);
+          console.warn("fetch error on get request:", error, resp);
         });
       });
     });
@@ -167,7 +188,7 @@ export default class Main extends Component {
   // publish onPress method.
   postEntry(navigator){
     var text = this.state.newEntry;
-    var data = helper.parseText(text);
+    var data = helper.parseText(text.toLowerCase());
     data.ats.forEach(function(at, index, ats) {
       var phoneNum = helper.parsePhoneNumber(at);
       if (phoneNum) {
@@ -177,14 +198,20 @@ export default class Main extends Component {
         var email = helper.parseEmail(at);
         if(email) {
           Communications.email(ats, null, null, null, data.inputs[0].toString().slice(1));
+          return;
         } else {
           var web = helper.parseWeb(at);
           if (web) {
             Communications.web(web[0]);
           } else {
-            var specialAt = helper.parseSpecial(at);
+            var specialAt = helper.parseSpecial(at).bind(helper);
             if (specialAt) {
-              specialAt();
+              specialAt(data.inputs);
+            } else {
+              var username  = helper.parseUsername
+              if(username) {
+                
+              }
             }
           }
         }
@@ -203,7 +230,6 @@ export default class Main extends Component {
         body: JSON.stringify(newEntry)
       })
         .then((response) => {
-          console.log(response);
           this.getEntries();
           navigator.pop();
         })
@@ -213,7 +239,8 @@ export default class Main extends Component {
     });
   }
 
-  //TODO: CBELLE
+
+
   deleteEntries(username, secret, msgId) {
     var userEntries = this.state.entries.getRowData(0,0);
     console.log('delete entries invoked');
@@ -266,6 +293,16 @@ export default class Main extends Component {
     });
   }
 
+  sendData(option) {
+    if (option === 'CALL') {
+      helper.callArray(this.state.sendData.json);
+    } else if (option === 'TEXT') {
+      helper.textArray(this.state.sendData.json, this.state.sendData.input)
+    } else if (option === 'EMAIL') {
+      helper.emailArray 
+    }
+    this.setModalVisible(false, {});
+  }
 
   filterTags(str) {
 
@@ -319,9 +356,6 @@ export default class Main extends Component {
   // Navigator is altered (via push, pop, etc), will check to see the title of the current route (note that
   // a Navigator is a stack of scenes, so the current route will be the last route in the stack), and will then
   // return the appropriate Component(s).
-
-  //KEEPING THIS STUFF JUST IN CASE, FOR NOW
-
   //this was right below the inital View
   //{this.renderTab(navigator)}
           /*<Tabs
@@ -391,7 +425,34 @@ export default class Main extends Component {
                 signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>
            </View>
          </Swiper>
+        <Modal
+            animationType={'fade'}
+            transparent={true}
+            visible={this.state.atModalVis}
+            onRequestClose={() => {this.setModalVisible(false)}}
+            >
+            <View style={styles.transContainer}>
+              <View style= {styles.prompt}>
+              <TouchableHighlight onPress={()=> this.sendData('EMAIL')}>
+                <View style={styles.modalButton}>
+                  <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'envelope-o'}/><Text>Email</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={()=> this.sendData('CALL')}>
+                <View style={styles.modalButton}>
+                <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'phone'}/><Text>Call</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={()=> this.sendData('TEXT')}>
+                <View style={styles.modalButton}>
+                <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'commenting-o'}/><Text>Text</Text>
+                </View>
+              </TouchableHighlight>
+              </View>
+            </View>
+          </Modal>
         </View>
+          
       )
     } else if (route.title === 'FriendPage') {
       return (
@@ -405,7 +466,8 @@ export default class Main extends Component {
           navigator={navigator}
           getEntries={ this.getEntries.bind(this) }
           updateEntry = { this.updateEntry.bind(this) }
-          location={ this.state.location }/>
+          location={ this.state.location }
+          updateModal = {this.setModalVisible.bind(this)}/>
       )
     } else if (route.title === 'SearchFriends') {
       return (
@@ -413,7 +475,6 @@ export default class Main extends Component {
           navigator={ navigator } />
       )
     } else if (route.title === 'CommentsScene') {
-      console.log('Route to Comments Scene');
       return (
         <CommentsScene entryId={route.entryId} userId={route.userId} location={this.state.location}/>
       )
@@ -521,6 +582,7 @@ export default class Main extends Component {
           }
           style={ styles.topBar } />
         } />
+
     )
   }
 }

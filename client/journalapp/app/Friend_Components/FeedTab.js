@@ -67,13 +67,10 @@ export default class FeedTab extends Component {
 
 
   getAllFriendsMessages() {
-    console.log('About to get all friends messages: ', this.state.friendList);
     var count = 0;
     var cb = () => {
       count++;
-      console.log(this.state.allMessages, count);
       if (count === this.state.friendList.length) {
-        console.log('Update the list entries');
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         //Sort the entries by date
         var cloneMessages = this.state.allMessages.slice();
@@ -81,7 +78,6 @@ export default class FeedTab extends Component {
         this.setState({
           entries: ds.cloneWithRows(cloneMessages)
         });
-        console.log(this.state.entries);
       }
     };
     this.state.friendList.forEach(friend => this.getFriendPosts(friend.id, cb));
@@ -89,7 +85,6 @@ export default class FeedTab extends Component {
 
 
   getFriendPosts(friendId, callback) {
-    console.log('Getting a friends posts');
     AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
       var token = store[0][1];
       var url0 = store[1][1];
@@ -103,7 +98,6 @@ export default class FeedTab extends Component {
       })
       .then( resp => { 
         resp.json().then( json => {
-          console.log('Fetched friends posts', json);
           this.setState({
             allMessages: this.state.allMessages.concat(json)
           });

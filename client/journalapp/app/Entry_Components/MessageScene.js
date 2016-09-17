@@ -17,6 +17,20 @@ import styles from '../styles/MessageSceneStyles';
 
 // Note that this is a scene, not a tab view. In this case, that means the user clicked on "What did you do today?" in 
 // EntriesTab.js. EntriesTab then tells Main.js to navigate to this scene. 
+var parseLocation = (xy) => {
+  var retval = [];
+  var dupe = JSON.parse(JSON.stringify(xy));
+  var ll = dupe.split(', ');
+  ll.forEach(function(l){
+    if (Number.isFinite(Number(l))) {
+      retval.push(parseInt(l));
+    } else {
+      retval.push(l);
+    }
+  });
+  return retval.join(', ');
+};
+
 export default class FriendScene extends Component {
   constructor(props) {
     super(props);
@@ -64,7 +78,7 @@ export default class FriendScene extends Component {
         <View style={ [styles.bodyWidth, styles.footer] }>
           <Icon style={ [styles.footerContent, styles.footerPadlock] /*part of input box footer*/ } name="lock-open"/>
           <Icon style={ [styles.footerContent, styles.footerArrow] /*part of input box footer*/} name="near-me"/>
-          <Text style={ [styles.footerContent, styles.footerText] }>{ this.props.location /*why doesn't this show?*/ }</Text>
+          <Text style={ [styles.footerContent, styles.footerText] }>{ parseLocation(this.props.location) }</Text>
         </View>
       </ScrollView>
     );

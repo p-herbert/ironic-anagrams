@@ -11,6 +11,10 @@ const styles = StyleSheet.create({
     marginLeft:12,
     marginBottom:12,
     marginTop:17
+  },
+  innerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
   }
 });
 

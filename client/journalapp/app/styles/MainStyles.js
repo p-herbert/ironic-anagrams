@@ -4,17 +4,39 @@ import {
 } from 'react-native';
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fdf6e3',
   },
+  transContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,.3)',
+    padding: 20
+  },
+  prompt: {
+    width: 200,
+    height: 200,
+    borderColor: 'gray',
+    borderWidth:.5,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,1)'
+  },
   textinput: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     fontSize: 22
+  },
+  modalButton: {
+    flex: 1,
+    flexWrap: 'wrap'
   },
   faintText: {
     color: '#fdf6e3'

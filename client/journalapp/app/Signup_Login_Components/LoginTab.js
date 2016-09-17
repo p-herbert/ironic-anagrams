@@ -45,6 +45,7 @@ export default class LoginTab extends Component {
         body: newUser
       })
       .then( resp => { 
+        console.log(resp);
         resp.json()
         .then( json => {
           // Make sure there is no error in the login information. Detects if the username is not in the DB, or if the password is wrong.
