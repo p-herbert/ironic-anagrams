@@ -30,6 +30,11 @@ var Comment = (props) => (
             { props.text }
           </Text>
         </View>
+        <View style={ styles.rowBody }>
+          <Text style={ styles.entryText }>
+            { props.username }
+          </Text>
+        </View>
       </View>
   </View>
 );

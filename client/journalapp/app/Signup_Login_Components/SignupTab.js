@@ -13,7 +13,7 @@ import {
   Dimensions
 } from 'react-native';
 
-import Form from 'react-native-form'
+import Form from 'react-native-form';
 import Button from 'react-native-button';
 
 import styles from '../styles/AuthGeneralStyles';
@@ -54,7 +54,11 @@ export default class SignupTab extends Component {
         .then( json => {
             if (json.token) {
               try {
-                AsyncStorage.multiSet([['@MySuperStore:token', json.token], ['@MySuperStore:username', this.state.username], ['@MySuperStore:respect', '100']], (err) => {
+                AsyncStorage.multiSet([
+                  ['@MySuperStore:token', json.token],
+                  ['@MySuperStore:username', this.state.username],
+                  ['@MySuperStore:fullname', this.state.fullname]
+                ], (err) => {
                   if ( err ) { console.warn(err); }
                   this.props.updateStatus(true);
                 });

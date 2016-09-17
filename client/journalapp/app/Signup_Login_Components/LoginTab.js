@@ -53,7 +53,13 @@ export default class LoginTab extends Component {
             Alert.alert(json.error);
           } else {
             try {
-              AsyncStorage.multiSet([['@MySuperStore:token', json.token], ['@MySuperStore:username', this.state.username]], (err) => {
+              console.log("JSON", json);
+              AsyncStorage.multiSet([
+                ['@MySuperStore:token', json.token],
+                ['@MySuperStore:username', this.state.username],
+                //This should be set to json.fullname
+                ['@MySuperStore:fullname', this.state.fullname]
+              ], (err) => {
                 if ( err ) { console.warn(err); }
                 this.props.updateStatus(true);
               });

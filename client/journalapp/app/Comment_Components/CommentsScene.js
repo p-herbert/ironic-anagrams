@@ -25,6 +25,7 @@ export default class CommentsScene extends Component {
       comment: '',
       entryId: this.props.entryId,
       userId: this.props.userId,
+      username: '',
       location: this.props.location,
       comments: [],
       maxLength: 100
@@ -49,6 +50,7 @@ export default class CommentsScene extends Component {
         console.log(resp);
         resp.json()
         .then( comments => {
+          console.log(comments);
           this.setState({
             comments: this.state.comments.concat(comments)
           });
@@ -58,6 +60,15 @@ export default class CommentsScene extends Component {
         });
       });
     });
+
+
+    AsyncStorage.getItem('@MySuperStore:fullname', (err, fullname) => {
+      console.log('fullname', fullname);
+//      this.setState({
+//        username: username
+//      });
+    });
+
   }
 
   updateComment(text) {
@@ -76,7 +87,9 @@ export default class CommentsScene extends Component {
           text: this.state.comment,
           location: this.state.location,
           userId: this.state.userId,
-          entryId: this.state.entryId};
+          entryId: this.state.entryId,
+          username: this.state.username
+        };
 
         fetch('http://localhost:3000/api/comments', {
           method: 'POST',
