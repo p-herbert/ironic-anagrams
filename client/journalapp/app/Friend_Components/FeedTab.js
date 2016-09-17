@@ -121,6 +121,12 @@ export default class FeedTab extends Component {
 
     return (
       <View style= { styles.container } >
+       <TextInput
+           keyboardType='default'
+           keyboardAppearance='light'
+           placeholder= 'Search tags'
+           style={ {height: 50, borderBottomWidth: 0.5, borderColor: '#cccccc'} }
+           onChangeText={ (text) => this.props.filterTags(text) }/>
         <ScrollView>
           <EntryList
             entries={ this.state.entries } 
