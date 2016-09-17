@@ -21,7 +21,7 @@ export default class CommentsScene extends Component {
     this.props = props;
 
     this.state = {
-      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
+      dynamicHeight: (val) => { return {height: Dimensions.get('window').height * val};},
       comment: '',
       entryId: this.props.entryId,
       userId: this.props.userId,
@@ -125,8 +125,8 @@ export default class CommentsScene extends Component {
           {marginTop: 0,
             marginLeft: 0,
             borderBottomWidth: 0.5,
-            borderColor: '#cccccc',
-            paddingBottom: 49}}>
+            borderColor: '#cccccc'
+            /*paddingBottom: 49*/}}>
           <TextInput
               ref={'textBox'}
               keyboardType='default'
@@ -134,16 +134,17 @@ export default class CommentsScene extends Component {
               multiline={ true }
               placeholder= 'Comment...'
               onChangeText={ (text) => this.updateComment(text) }
-              style={ [this.state.dynamicHeight(), styles.bodyWidth, styles.fadedText] }
+              style={ [this.state.dynamicHeight(0.125), styles.bodyWidth, styles.fadedText] }
               maxLength={ this.state.maxLength }/>
-          <View style={ [styles.bodyWidth, styles.footer] }>
+          <View style={ [styles.bodyWidth, styles.footer, this.state.dynamicHeight(0.0625)] }>
             <Text style={ [styles.footerContent, styles.footerText] }>{ this.charsLeft(this.state.comment) }</Text>
             <Text style={ [styles.footerContent, styles.footerArrow]} onPress={ () => { this.publishComment() } }>{ 'Publish' }</Text>
           </View>
         </View>
         <View style={{
             position: 'relative',
-            height: Dimensions.get('window').height - 70,
+            marginTop: Dimensions.get('window').height * 0.0625,
+            height: Dimensions.get('window').height * 0.75,
             width: Dimensions.get('window').width * .93,
             marginLeft: Dimensions.get('window').width * .035,
             marginRight:Dimensions.get('window').width * .035}}>
