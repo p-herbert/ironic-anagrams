@@ -440,7 +440,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = U9Q5P26YG7;
+						DevelopmentTeam = 4K5GA9E4RV;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
 								enabled = 1;
@@ -755,7 +755,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Journalapp456;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Journalapp4560;
 				PRODUCT_NAME = Journalapp;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -783,7 +783,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Journalapp456;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.example.Journalapp4560;
 				PRODUCT_NAME = Journalapp;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;

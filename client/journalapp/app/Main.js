@@ -81,7 +81,7 @@ export default class Main extends Component {
 
   processDelete(msgId) {
 
-    var curState = this.state.entries.slice();
+    var curState = this.state.allEntries.slice();
 
     var result = curState.filter(function(entry) {
       return entry.id !== msgId;
@@ -248,7 +248,11 @@ export default class Main extends Component {
 
               this.processDelete(msgId);
 
-              this.setState({load: false, entries: this.state.allEntries});
+              this.setState({
+                load: false, 
+                entries: ds.cloneWithRows(this.state.allEntries)
+              });
+
               console.log('Delete all entries of user ' + username);
 
               response.json();

@@ -131,7 +131,8 @@ export default class FeedTab extends Component {
              borderWidth: 1, 
              borderColor: '#cccccc', 
              marginBottom: 16, 
-             marginTop: 12}}
+             marginTop: 12,
+             backgroundColor: '#f9ebc3'}}
            onChangeText={ (text) => this.props.filterTags(text) }/>
         <ScrollView>
           <EntryList

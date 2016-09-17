@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(175,175,175,.6)',
     height: 49, 
     paddingTop: 6, 
+    backgroundColor: '#f9ebc3'
 
   },
   footerContent: {

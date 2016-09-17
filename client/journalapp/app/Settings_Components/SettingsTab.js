@@ -64,7 +64,8 @@ export default class SettingsTab extends Component {
       })
       .then(resp => {
         console.log('delete user successful');
-        resp.json();
+        Alert.alert('Successfully deleted your account');
+        this.props.signOut();
       })
       .catch(err => console.log('Error: ', err));
     });
@@ -103,8 +104,8 @@ export default class SettingsTab extends Component {
             }
             }/>
 
-        <Button onPress= { () => this.props.signOut() } style={ {marginTop: 10, padding: 20, backgroundColor: 'white'} }>Sign Out</Button>
-        <Button onPress= { () => { this.deleteAcct(); this.props.signOut(); } } style={ {marginTop: 10, padding: 20, color: 'red', backgroundColor: 'white'} }>Delete Account</Button>
+        <Button onPress= { () => this.props.signOut() } style={ {marginTop: 10, padding: 20, backgroundColor: '#f9ebc3'} }>Sign Out</Button>
+        <Button onPress= { () => { this.deleteAcct() } } style={ {marginTop: 10, padding: 20, color: 'red', backgroundColor: '#f9ebc3'} }>Delete Account</Button>
       </View>
    );
   }

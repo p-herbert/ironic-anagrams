@@ -5,7 +5,7 @@ import {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fafafa',
+    backgroundColor: '#f9ebc3',
     flex: 1,
     flexDirection: 'column'
   },

@@ -45,7 +45,9 @@ export default class CommentsScene extends Component {
         },
         query: id
       })
-      .then( resp => { resp.json()
+      .then( resp => { 
+        console.log(resp);
+        resp.json()
         .then( comments => {
           this.setState({
             comments: this.state.comments.concat(comments)
