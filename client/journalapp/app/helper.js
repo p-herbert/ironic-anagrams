@@ -73,6 +73,15 @@ export default class helpers {
   passDisplay(modalDisplay){
     this.showModal = modalDisplay;
   }
+  textArray(userArray, input){
+    textArray(userArray, input);
+  }
+  callArray(userArray, input){
+    callArray(userArray, input);
+  }
+  emailArray(userArray, input){
+    emailArray(userArray, input);
+  }
   netListener(reach){
     var SSID = {ssid: 'UNKNOWN'};
     var ip = {ip: 'UNKNOWN'};
@@ -189,7 +198,6 @@ export default class helpers {
       input = '';
     }
     retval = {tags: tags, ats: ats, inputs: inputs};
-    console.log(retval);
     return retval;
 }
 
@@ -220,26 +228,32 @@ parsePhoneNumber(phoneNum){
   };
 
   atNetwork(input) {
-    console.log(input);
     var context = this;
-    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url', '@MySuperStore:ssid'], (err, store) => {
-    var token = store[0][1];
-    var url = store[1][1];
-    var ssid = store[2][1];
-    fetch(`${ url }api/users?ssid=${ssid}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token
-      },
-      })
-      .then( resp => { resp.json()
-        .then( json => {
-          console.log(json);
-          context.showModal(true, {json: json, input: input});
-        })
-        .catch((error) => {
-          console.warn("fetch error on getrequest:", error);
+    AsyncStorage.multiGet(['@MySuperStore:token', '@MySuperStore:url'], (err, store) => {
+      NetworkInfo.getSSID(ssid => {
+        NetworkInfo.getIPAddress(ip => {
+          console.log(ip, ssid);
+        var token = store[0][1];
+        var url = store[1][1];
+        fetch(`${ url }api/users?ssid=${ssid}&ip=${ip}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': token
+          },
+          })
+          .then( resp => { resp.json()
+            .then( json => {
+              if(json.length > 0){
+                context.showModal(true, {json: json, input: input});
+              } else {
+                Alert.alert('No one on the Network detected');
+              }
+            })
+            .catch((error) => {
+              console.warn("fetch error on getrequest:", error);
+            });
+          });
         });
       });
     });
@@ -261,7 +275,11 @@ parsePhoneNumber(phoneNum){
       })
       .then( resp => { resp.json()
         .then( json => {
-          context.showModal(true, {json: json, input: input});
+          if(json.length > 0){
+            context.showModal(true, {json: json, input: input});
+          } else {
+            Alert.alert('No friends found');
+          }
         })
         .catch((error) => {
           console.warn("error on json():", error);
@@ -275,7 +293,6 @@ parsePhoneNumber(phoneNum){
 
   parseSpecial(specialAt) {
     if (specialAt === '@network') {
-      console.log('@network detected');
       return this.atNetwork;
     } else if (specialAt = '@friends') {
       return this.atFriends;

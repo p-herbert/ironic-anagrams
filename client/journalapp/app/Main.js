@@ -428,9 +428,20 @@ export default class Main extends Component {
             >
             <View style={styles.transContainer}>
               <View style= {styles.prompt}>
-            
               <TouchableHighlight onPress={()=> this.sendData('EMAIL')}>
-              <Text> TEST </Text>
+                <View style={styles.modalButton}>
+                  <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'envelope-o'}/><Text>Email</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={()=> this.sendData('CALL')}>
+                <View style={styles.modalButton}>
+                <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'phone'}/><Text>Call</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={()=> this.sendData('TEXT')}>
+                <View style={styles.modalButton}>
+                <AwesomeIcon size={24} style={styles.image} color="#fdf6e3" name={'commenting-o'}/><Text>Text</Text>
+                </View>
               </TouchableHighlight>
               </View>
             </View>
@@ -446,7 +457,6 @@ export default class Main extends Component {
       )
     } else if (route.title === 'MessageScene') {
       return (
-        //NEED TO PASS MESSAGE SCENE THE WAY TO CHANGE MODEL VIS STATE
         <MessageScene
           navigator={navigator}
           getEntries={ this.getEntries.bind(this) }
@@ -460,7 +470,6 @@ export default class Main extends Component {
           navigator={ navigator } />
       )
     } else if (route.title === 'CommentsScene') {
-      console.log('Route to Comments Scene');
       return (
         <CommentsScene entryId={route.entryId} userId={route.userId} location={this.state.location}/>
       )

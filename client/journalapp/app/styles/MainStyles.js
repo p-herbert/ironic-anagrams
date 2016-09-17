@@ -34,6 +34,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 22
   },
+  modalButton: {
+    flex: 1,
+    flexWrap: 'wrap'
+  },
   faintText: {
     color: '#fdf6e3'
   },
