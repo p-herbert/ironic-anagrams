@@ -109,7 +109,7 @@ export default class CommentsScene extends Component {
   }
 
   charsLeft(str) {
-    return this.state.maxLength - str + ' characters left';
+    return this.state.maxLength - str.length + ' characters left';
   }
 
   render() {
