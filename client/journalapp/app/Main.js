@@ -39,6 +39,9 @@ helper = new helpers();
 NetworkInfo.getSSID(ssid =>{
   console.log(ssid);
 });
+
+var _ = require('underscore');
+
 // Linking.openURL('sms://open?addresses=6503846438,4083962431');
 // Communications.text('6503846438, 4083962431', 'test');
 export default class Main extends Component {
@@ -46,7 +49,6 @@ export default class Main extends Component {
     super(props);
     this.props = props;
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     this.state = {
       page: 'EntriesTab',
       entries: ds.cloneWithRows([]),
@@ -238,8 +240,19 @@ export default class Main extends Component {
   }
 
 
-  filterTags() {
+  filterTags(str) {
+
+    var tags = str.toLowerCase().split(' ');
+
+    var filteredTags = tags.filter(function(tag) {
+      return tag !== '';
+    }).map(function(tag) {
+      return '#' + tag;
+    });
+    
     console.log('Fetching new posts based on tag filtering');
+    this.getEntries(filteredTags);
+    
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////
@@ -331,12 +344,13 @@ export default class Main extends Component {
              <EntriesTab
                navigator={navigator}
                getEntries={ this.getEntries.bind(this) }
-               entries={ this.state.entries }/>
+               entries={ this.state.entries }
+               filterTags= { _.debounce(this.filterTags.bind(this), 500) }/>
            </View>
            <View style={styles.slide2}>
              <FeedTab
              navigator={ navigator }
-             filterTags= {this.filterTags.bind(this) }/>
+             filterTags= { _.debounce(this.filterTags.bind(this), 500) }/>
            </View>
            <View style={styles.slide3}>
             <FriendsTab
