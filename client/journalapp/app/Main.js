@@ -38,8 +38,8 @@ import NetworkInfo from 'react-native-network-info';
 import helpers from './helper.js';
 import Swiper from 'react-native-swiper';
 import BluetoothSerial from 'react-native-bluetooth-serial'
-BluetoothSerial.list().then(function(data, err){
-  console.log(data, err);
+BluetoothSerial.list().then(function(data){
+  console.log(data);
 });
 BluetoothSerial.isEnabled().then(function(data, err){
   console.log(data, err);
