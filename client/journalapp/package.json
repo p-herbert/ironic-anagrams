@@ -18,6 +18,7 @@
     "react-native-prompt": "^0.18.5",
     "react-native-sensor-manager": "^0.1.9",
     "react-native-tabs": "^1.0.9",
-    "react-native-vector-icons": "^2.1.0"
+    "react-native-vector-icons": "^2.1.0",
+    "underscore": "^1.8.3"
   }
 }

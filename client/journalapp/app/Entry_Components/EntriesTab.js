@@ -39,6 +39,12 @@ export default class EntriesTab extends Component {
     return (
       <View style={ styles.container }>
         <View style={ styles.header }>
+          <TextInput
+              keyboardType='default'
+              keyboardAppearance='light'
+              placeholder= 'Search tags'
+              style={ {height: 50, textAlign: 'center', borderWidth: 1, borderColor: '#cccccc', marginBottom: 16} }
+              onChangeText={ (text) => this.props.filterTags(text) }/>
           <Text style={ styles.date }>{ DateFormatter(new Date(), 'ddd, mmm d') }</Text>
           <Button style={ styles.headerButton } 
                   onPress={ () => this.props.navigator.push({ title: 'MessageScene'}) }>

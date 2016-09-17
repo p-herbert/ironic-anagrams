@@ -37,6 +37,9 @@ helper = new helpers();
 NetworkInfo.getSSID(ssid =>{
   console.log(ssid);
 });
+
+var _ = require('underscore');
+
 // Linking.openURL('sms://open?addresses=6503846438,4083962431');
 // Communications.text('6503846438, 4083962431', 'test');
 export default class Main extends Component {
@@ -44,13 +47,12 @@ export default class Main extends Component {
     super(props);
     this.props = props;
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     this.state = {
       page: 'EntriesTab',
       entries: ds.cloneWithRows([]),
       newEntry: '',
       friendName: '',
-      location: ''
+      location: '',
     };
   }
 
@@ -234,8 +236,19 @@ export default class Main extends Component {
   }
 
 
-  filterTags() {
+  filterTags(str) {
+
+    var tags = str.toLowerCase().split(' ');
+
+    var filteredTags = tags.filter(function(tag) {
+      return tag !== '';
+    }).map(function(tag) {
+      return '#' + tag;
+    });
+    
     console.log('Fetching new posts based on tag filtering');
+    this.getEntries(filteredTags);
+    
   }
 
   // According to the state's current page, return a certain tab view. Tab views are all stateful, and will
@@ -245,7 +258,8 @@ export default class Main extends Component {
     if (this.state.page === "EntriesTab") return <EntriesTab
                                                     navigator={navigator}
                                                     getEntries={ this.getEntries.bind(this) }
-                                                    entries={ this.state.entries }/>;
+                                                    entries={ this.state.entries }
+                                                    filterTags={ _.debounce(this.filterTags.bind(this), 500) }/>;
     if (this.state.page === "FriendsTab") return <FriendsTab
                                                     navigator={navigator}
                                                     updateFriend={ this.updateFriend.bind(this) }/>;
@@ -253,7 +267,7 @@ export default class Main extends Component {
                                                     signOut={ this.props.signOut } deleteEntries={this.deleteEntries.bind(this)}/>;
     if (this.state.page === "FeedTab") return <FeedTab
                                                     navigator={ navigator }
-                                                    filterTags= {this.filterTags.bind(this) }/>; //this method Julian has written
+                                                    filterTags= { _.debounce(this.filterTags.bind(this), 500) }/>; //this method Julian has written
 
   }
 
