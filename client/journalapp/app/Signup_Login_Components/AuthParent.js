@@ -5,7 +5,8 @@ import {
   Text,
   View,
   AsyncStorage,
-  Dimensions
+  Dimensions,
+  Image
 } from 'react-native';
 
 import Tabs from 'react-native-tabs';
@@ -39,13 +40,14 @@ export default class AuthParent extends React.Component {
 
     return (
         <View style={styles.container}>
-
-        {this.renderTab()}
-
+          <View style={styles.fixit}>
+            <Image source={require('../images/foggytower2.jpg')} style={styles.backgroundImage} />
+          </View>
+          {this.renderTab()}
           <Tabs
             selected={page}
             style={styles.tabbar}
-            selectedStyle={{color:'#333333'}} onSelect={el=>this.setState({page:el.props.name})}>
+            selectedStyle={{color:'#e3ddcc'}} onSelect={el=>this.setState({page:el.props.name})}>
               <Text style={styles.tabbartext} name="SignupTab">Sign Up</Text>
               <Text style={styles.tabbartext} name="LoginTab">Login</Text>
           </Tabs>
@@ -53,6 +55,5 @@ export default class AuthParent extends React.Component {
         </View>
     );
   }
-
 
 };
