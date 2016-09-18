@@ -21,10 +21,11 @@ export default class CommentsScene extends Component {
     this.props = props;
 
     this.state = {
-      dynamicHeight: () => { return {height: Dimensions.get('window').height - 49 - 500};},
+      dynamicHeight: (val) => { return {height: Dimensions.get('window').height * val};},
       comment: '',
       entryId: this.props.entryId,
       userId: this.props.userId,
+      username: '',
       location: this.props.location,
       comments: [],
       maxLength: 100
@@ -49,6 +50,7 @@ export default class CommentsScene extends Component {
         console.log(resp);
         resp.json()
         .then( comments => {
+          console.log(comments);
           this.setState({
             comments: this.state.comments.concat(comments)
           });
@@ -58,6 +60,15 @@ export default class CommentsScene extends Component {
         });
       });
     });
+
+
+    AsyncStorage.getItem('@MySuperStore:fullname', (err, fullname) => {
+      console.log('fullname', fullname);
+//      this.setState({
+//        username: username
+//      });
+    });
+
   }
 
   updateComment(text) {
@@ -68,39 +79,46 @@ export default class CommentsScene extends Component {
 
   publishComment() {
 
-    AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
+    if (this.state.comment.length > 0) {
 
-      var newComment = {
-        text: this.state.comment,
-        location: this.state.location,
-        userId: this.state.userId,
-        entryId: this.state.entryId};
+      AsyncStorage.getItem('@MySuperStore:token', (err, token) => {
 
-      fetch('http://localhost:3000/api/comments', {
-        method: 'POST',
-        headers: {
-         'Content-Type': 'application/json',
-         'x-access-token': token
-        },
-        body: JSON.stringify(newComment)
-      })
-      .then( resp => { resp.json()
-        .then( comment => {
+        var newComment = {
+          text: this.state.comment,
+          location: this.state.location,
+          userId: this.state.userId,
+          entryId: this.state.entryId,
+          username: this.state.username
+        };
 
-          this.refs.textBox.setNativeProps({text: ''});
-          this.state.comments.push(comment);
-
-          this.setState({
-            comment: '',
-            comments: this.state.comments
-          });
-
+        fetch('http://localhost:3000/api/comments', {
+          method: 'POST',
+          headers: {
+           'Content-Type': 'application/json',
+           'x-access-token': token
+          },
+          body: JSON.stringify(newComment)
         })
-        .catch((error) => {
-          console.warn("fetch error: ", error);
+        .then( resp => { resp.json()
+          .then( comment => {
+
+            this.refs.textBox.setNativeProps({text: ''});
+            this.state.comments.push(comment);
+
+            this.setState({
+              comment: '',
+              comments: this.state.comments
+            });
+
+          })
+          .catch((error) => {
+            console.warn("fetch error: ", error);
+          });
         });
       });
-    });
+
+    }
+
   }
 
   makeDataSource(data) {
@@ -109,7 +127,7 @@ export default class CommentsScene extends Component {
   }
 
   charsLeft(str) {
-    return this.state.maxLength - str + ' characters left';
+    return this.state.maxLength - str.length + ' characters left';
   }
 
   render() {
@@ -120,8 +138,8 @@ export default class CommentsScene extends Component {
           {marginTop: 0,
             marginLeft: 0,
             borderBottomWidth: 0.5,
-            borderColor: '#cccccc',
-            paddingBottom: 49}}>
+            borderColor: '#cccccc'
+            /*paddingBottom: 49*/}}>
           <TextInput
               ref={'textBox'}
               keyboardType='default'
@@ -129,16 +147,17 @@ export default class CommentsScene extends Component {
               multiline={ true }
               placeholder= 'Comment...'
               onChangeText={ (text) => this.updateComment(text) }
-              style={ [this.state.dynamicHeight(), styles.bodyWidth, styles.fadedText] }
+              style={ [this.state.dynamicHeight(0.125), styles.bodyWidth, styles.fadedText] }
               maxLength={ this.state.maxLength }/>
-          <View style={ [styles.bodyWidth, styles.footer] }>
+          <View style={ [styles.bodyWidth, styles.footer, this.state.dynamicHeight(0.0625)] }>
             <Text style={ [styles.footerContent, styles.footerText] }>{ this.charsLeft(this.state.comment) }</Text>
             <Text style={ [styles.footerContent, styles.footerArrow]} onPress={ () => { this.publishComment() } }>{ 'Publish' }</Text>
           </View>
         </View>
         <View style={{
             position: 'relative',
-            height: Dimensions.get('window').height - 70,
+            marginTop: Dimensions.get('window').height * 0.0625,
+            height: Dimensions.get('window').height * 0.75,
             width: Dimensions.get('window').width * .93,
             marginLeft: Dimensions.get('window').width * .035,
             marginRight:Dimensions.get('window').width * .035}}>
