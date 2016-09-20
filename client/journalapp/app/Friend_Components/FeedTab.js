@@ -75,12 +75,19 @@ export default class FeedTab extends Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         //Sort the entries by date
         var cloneMessages = this.state.allMessages.slice();
+        console.log('clone', cloneMessages);
         cloneMessages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         this.setState({
           entries: ds.cloneWithRows(cloneMessages)
         });
       }
     };
+    
+    // Clear the messages
+    this.setState({
+      allMessages: []
+    });
+
     this.state.friendList.forEach(friend => this.getFriendPosts(friend.id, cb, tags));
   }
 
