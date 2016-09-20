@@ -130,7 +130,7 @@ export default class Main extends Component {
         //     this.setState({location: res.locality + ', ' + res.adminArea});
         //   })
         //   .catch( err => {
-        //     console.dir(err) 
+        //     console.dir(err)
             this.setState({location: latLng['lat'] + ', ' +  latLng['lng']});
         //   });
 
@@ -167,7 +167,7 @@ export default class Main extends Component {
           'x-access-token': token
         }
       })
-      .then( resp => { 
+      .then( resp => {
         console.log(resp);
         resp.json()
         .then( json => {
@@ -210,7 +210,7 @@ export default class Main extends Component {
             } else {
               var username  = helper.parseUsername
               if(username) {
-                
+
               }
             }
           }
@@ -255,8 +255,8 @@ export default class Main extends Component {
 
       if (msgId) {
         queryUrl = '?messageId=' + msgId;
-      } 
-      
+      }
+
       if (secret && secret.toUpperCase() === 'RESET') {
 
           //set load to true
@@ -276,7 +276,7 @@ export default class Main extends Component {
               this.processDelete(msgId);
 
               this.setState({
-                load: false, 
+                load: false,
                 entries: ds.cloneWithRows(this.state.allEntries)
               });
 
@@ -287,7 +287,7 @@ export default class Main extends Component {
             .catch((error) => {
               // load to false
               this.setState({load: false});
-              console.warn("fetch error:", error);   
+              console.warn("fetch error:", error);
           });
       }
     });
@@ -299,7 +299,7 @@ export default class Main extends Component {
     } else if (option === 'TEXT') {
       helper.textArray(this.state.sendData.json, this.state.sendData.input)
     } else if (option === 'EMAIL') {
-      helper.emailArray 
+      helper.emailArray
     }
     this.setModalVisible(false, {});
   }
@@ -313,10 +313,10 @@ export default class Main extends Component {
     }).map(function(tag) {
       return '#' + tag;
     });
-    
+
     console.log('Fetching new posts based on tag filtering');
     cb(filteredTags);
-    
+
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////
@@ -398,7 +398,7 @@ export default class Main extends Component {
       return (
         <View style={styles.container}>
 
-          <Swiper style={styles.wrapper} 
+          <Swiper style={styles.wrapper}
                   showsButtons={true}
                   loop={false}
                   onMomentumScrollEnd={(e, state, context)=> {this.setState({page: this.state.slideView[state.index]});}}>
@@ -452,7 +452,7 @@ export default class Main extends Component {
             </View>
           </Modal>
         </View>
-          
+
       )
     } else if (route.title === 'FriendPage') {
       return (
