@@ -304,7 +304,7 @@ export default class Main extends Component {
     this.setModalVisible(false, {});
   }
 
-  filterTags(str) {
+  filterTags(str, cb) {
 
     var tags = str.toLowerCase().split(' ');
 
@@ -315,7 +315,7 @@ export default class Main extends Component {
     });
     
     console.log('Fetching new posts based on tag filtering');
-    this.getEntries(filteredTags);
+    cb(filteredTags);
     
   }
 
